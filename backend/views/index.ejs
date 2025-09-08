@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hospital Dashboard Test</title>
+  <style>
+    body { font-family: sans-serif; margin: 30px; }
+    label { display: block; margin-top: 10px; }
+    select, input, button { padding: 6px; margin-top: 4px; width: 250px; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <h2>🔐 Login</h2>
+  <form id="loginForm" action="/api/auth/login" method="post">
+    <label>Email: <input type="email" id="email" name="email" required /></label>
+    <label>Password: <input type="password" name="password" id="password" required /></label>
+    <button type="submit">Login</button>
+  </form>
+
+  <div id="patientSection" class="hidden">
+    <h3>🌍 Select City & Hospital</h3>
+    <label>City:
+      <select id="citySelect">
+        <option value="">-- Select City --</option>
+      </select>
+    </label>
+    <label>Hospital:
+      <select id="hospitalSelect" disabled>
+        <option value="">-- Select Hospital --</option>
+      </select>
+    </label>
+    <button id="selectHospitalBtn">Continue to Dashboard</button>
+  </div>
+
+  <div id="dashboardSection" class="hidden">
+    <h2>📊 Dashboard</h2>
+    <pre id="dashboardContent"></pre>
+  </div>
+
+  <script>
+    const apiBase = 'http://localhost:4000/api';
+
+    const loginForm = document.getElementById('loginForm');
+    const citySelect = document.getElementById('citySelect');
+    const hospitalSelect = document.getElementById('hospitalSelect');
+    const selectHospitalBtn = document.getElementById('selectHospitalBtn');
+    const patientSection = document.getElementById('patientSection');
+    const dashboardSection = document.getElementById('dashboardSection');
+    const dashboardContent = document.getElementById('dashboardContent');
+
+    let userRole = null;
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      const res = await fetch(`${apiBase}/auth/login`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        userRole = data.role;
+        if (userRole === 'patient') {
+          loadCities();
+          patientSection.classList.remove('hidden');
+        } else {
+          loadDashboard();
+        }
+      } else {
+        alert(data.error || 'Login failed');
+      }
+    });
+
+    async function loadCities() {
+      const res = await fetch(`${apiBase}/context/cities`);
+      const data = await res.json();
+      citySelect.innerHTML = '<option value="">-- Select City --</option>';
+      data.cities.forEach(city => {
+        const option = document.createElement('option');
+        option.value = city;
+        option.textContent = city;
+        citySelect.appendChild(option);
+      });
+    }
+
+    citySelect.addEventListener('change', async () => {
+      const city = citySelect.value;
+      if (!city) return;
+
+      const res = await fetch(`${apiBase}/context/hospitals/${city}`);
+      const data = await res.json();
+
+      hospitalSelect.disabled = false;
+      hospitalSelect.innerHTML = '<option value="">-- Select Hospital --</option>';
+      data.hospitals.forEach(h => {
+        const option = document.createElement('option');
+        option.value = h._id;
+        option.textContent = h.name;
+        hospitalSelect.appendChild(option);
+      });
+    });
+
+    selectHospitalBtn.addEventListener('click', async () => {
+      const hospitalId = hospitalSelect.value;
+      const city = citySelect.value;
+      if (!hospitalId || !city) return alert('Select both city and hospital');
+
+      const res = await fetch(`${apiBase}/context/select-hospital`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ hospitalId, city })
+      });
+
+      if (res.ok) {
+        loadDashboard();
+      } else {
+        const data = await res.json();
+        alert(data.error || 'Hospital selection failed');
+      }
+    });
+
+    async function loadDashboard() {
+      const res = await fetch(`${apiBase}/dashboard`, {
+        method: 'GET',
+        credentials: 'include'
+      });
+
+      const data = await res.json();
+      loginForm.classList.add('hidden');
+      patientSection.classList.add('hidden');
+      dashboardSection.classList.remove('hidden');
+      dashboardContent.textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>

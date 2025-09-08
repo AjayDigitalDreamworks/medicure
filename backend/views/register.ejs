@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register - Patient</title>
+  <style>
+    body { font-family: sans-serif; padding: 30px; }
+    form { max-width: 400px; }
+    label { display: block; margin-top: 10px; }
+    input { padding: 6px; width: 100%; margin-top: 4px; }
+    button { margin-top: 20px; padding: 10px; width: 100%; background: teal; color: white; border: none; }
+  </style>
+</head>
+<body>
+
+  <h2>📝 Patient Registration</h2>
+
+  <form action="/api/auth/register-patient" method="post">
+    <label>Name:
+      <input type="text" id="name" name="name" required />
+    </label>
+
+    <label>Email:
+      <input type="email" id="email" name="email" required />
+    </label>
+
+    <label>Phone:
+      <input type="tel" id="phone" name="phone" required />
+    </label>
+
+    <label>Password:
+      <input type="password" id="password" name="password" required />
+    </label>
+
+    <button type="submit">Register</button>
+  </form>
+
+  <p id="message" style="color: green; margin-top: 15px;"><%= message %></p>
+
+</body>
+</html>
