@@ -10,6 +10,8 @@ import Bed from'./models/Bed.js';
 import Patient from'./models/Patient.js';
 import { Queue, Department } from './models/Opd.js';
 import Inventory from'./models/Inventory.js';
+import path from "path";
+import { fileURLToPath } from 'url';
 
 // Load environment variables
 dotenv.config();
@@ -146,6 +148,16 @@ app.get('/', async (req, res) => {
   }
 });
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
+app.use(express.static(path.join(__dirname, "./dist")));
+
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "./dist/index.html"));
+});
 // -----------------------------
 //  404 + Central Error Handler
 // -----------------------------
