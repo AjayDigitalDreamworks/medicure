@@ -126,8 +126,8 @@ const [dashboardData, setDashboardData] = useState([]);
   ) : (
     <>
       {/* <Nav.Link href="#" className="text-secondary">OPD Queue</Nav.Link> */}
-      <Nav.Link href="/login" className="text-secondary">Login</Nav.Link>
-      <Nav.Link href="/signup" className="text-secondary">Register</Nav.Link>
+      <Nav.Link onClick={() => navigate('/login')} className="text-secondary">Login</Nav.Link>
+      <Nav.Link  className="text-secondary">Register</Nav.Link>
       {/* <Nav.Link href="#" className="text-secondary">Bed Management</Nav.Link> */}
       {/* <Nav.Link href="#" className="text-secondary">Patient Admission</Nav.Link> */}
       {/* <Nav.Link href="#" className="text-secondary position-relative bell-icon">
