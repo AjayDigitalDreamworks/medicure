@@ -1,22 +1,34 @@
 import { defineConfig, Plugin } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
-import { createServer } from "./server";
+
+// Detect if we’re in dev mode
+const isDev = process.env.NODE_ENV !== "production";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    proxy: {
+      "/api": {
+        target: "https://medicure-57ts.onrender.com/", // Replace with real backend URL
+        changeOrigin: true,
+        secure: false,
+      },
+    },
     fs: {
       allow: ["./client", "./shared", "./node_modules"],
       deny: [".env", ".env.*", "*.{crt,pem}", "**/.git/**", "server/**"],
     },
   },
   build: {
-    outDir: "dist/spa",
+    outDir: "dist", // Netlify expects this
   },
-  plugins: [react(), expressPlugin()],
+  plugins: [
+    react(),
+    ...(isDev ? [expressPlugin()] : []), // Only add express plugin in dev
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./client"),
@@ -28,11 +40,10 @@ export default defineConfig(({ mode }) => ({
 function expressPlugin(): Plugin {
   return {
     name: "express-plugin",
-    apply: "serve", // Only apply during development (serve mode)
+    apply: "serve", // Only apply during dev
     configureServer(server) {
+      const { createServer } = require("./server"); // Import only in dev
       const app = createServer();
-
-      // Add Express app as middleware to Vite dev server
       server.middlewares.use(app);
     },
   };
