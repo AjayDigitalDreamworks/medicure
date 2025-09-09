@@ -41,6 +41,7 @@ app.set('view engine', 'ejs');
 // app.get('/', (req, res) => res.render('register'));
 
 
+app.set('trust proxy', 1); // or true
 
 // JSON & Cookie parsing
 app.use(express.json({ limit: '1mb' }));

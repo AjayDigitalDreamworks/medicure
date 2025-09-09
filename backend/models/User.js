@@ -181,9 +181,8 @@ const UserSchema = new mongoose.Schema({
 
   patientProfile: {
     type: PatientProfileSchema,
-    required: function () {
-      return this.role === 'patient';
-    }
+    required: false, // ✅ Now it’s optional
+    default: {},
   }
 
 }, { timestamps: true });
