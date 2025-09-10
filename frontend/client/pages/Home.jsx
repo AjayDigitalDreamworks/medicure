@@ -74,7 +74,7 @@ const [userRole, setUserRole] = React.useState(null);
 const [dashboardData, setDashboardData] = useState([]);
 
   useEffect(() => {
-   axios.get('https://medicure-57ts.onrender.com/')
+   axios.get('http://localhost:4000/')
   .then(res => {
     const updatedData = res.data.map(item => ({
       ...item,

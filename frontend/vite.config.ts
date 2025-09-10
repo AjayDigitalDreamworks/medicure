@@ -12,7 +12,7 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     proxy: {
       "/api": {
-        target: "https://medicure-57ts.onrender.com/", // Replace with real backend URL
+        target: "http://localhost:4000/", // Replace with real backend URL
         changeOrigin: true,
         secure: false,
       },

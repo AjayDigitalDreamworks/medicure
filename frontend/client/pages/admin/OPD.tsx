@@ -46,9 +46,9 @@ const [admin, setAdmin] = useState({ name: "", specialization: "" });
 
         // Assuming backend returns admin details + metrics in dashboard API
         const [dashboardRes, requestsRes, queueRes] = await Promise.all([
-          axios.get("https://medicure-57ts.onrender.com/api/admin/dashboard", config),
-          axios.get("https://medicure-57ts.onrender.com/api/admin/appointments", config),
-          axios.get("https://medicure-57ts.onrender.com/api/admin/queue", config),
+          axios.get("http://localhost:4000/api/admin/dashboard", config),
+          axios.get("http://localhost:4000/api/admin/appointments", config),
+          axios.get("http://localhost:4000/api/admin/queue", config),
         ]);
 
         const dashboardData = dashboardRes.data;

@@ -94,7 +94,7 @@ export default function Index({
     const token = localStorage.getItem("token");
     if (!token) return;
 
-    const res = await axios.get("https://medicure-57ts.onrender.com/api/dashboard", {
+    const res = await axios.get("http://localhost:4000/api/dashboard", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -218,7 +218,7 @@ const handleLogout = async () => {
     localStorage.removeItem('token');
 
     // Send request to backend to clear cookie
-    await axios.post('https://medicure-57ts.onrender.com/api/auth/logout', {}, { withCredentials: true });
+    await axios.post('http://localhost:4000/api/auth/logout', {}, { withCredentials: true });
 
     // Optional: clear other localStorage items
     localStorage.removeItem('userRole');

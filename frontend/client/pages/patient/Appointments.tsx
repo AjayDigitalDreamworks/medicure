@@ -38,7 +38,7 @@ export default function Appointments() {
 
   // Fetch departments
   useEffect(() => {
-    axios.get("https://medicure-57ts.onrender.com/api/patient/departments").then((res) => {
+    axios.get("http://localhost:4000/api/patient/departments").then((res) => {
       setDepartments(res.data);
       if (res.data.length > 0) {
         setDepartment(res.data[0].name);
@@ -55,7 +55,7 @@ useEffect(() => {
   }
 
   axios
-    .get("https://medicure-57ts.onrender.com/api/patient/doctors", {
+    .get("http://localhost:4000/api/patient/doctors", {
       params: { department },
     })
     .then((res) => {
@@ -78,7 +78,7 @@ useEffect(() => {
 
   const formattedDate = date.toISOString().split("T")[0];
   axios
-    .get("https://medicure-57ts.onrender.com/api/patient/slots", {
+    .get("http://localhost:4000/api/patient/slots", {
       params: { doctor: doctor._id, date: formattedDate },
     })
     .then((res) => {
@@ -107,7 +107,7 @@ useEffect(() => {
         return;
       }
 
-      await axios.post("https://medicure-57ts.onrender.com/api/patient/appointments", formData, {
+      await axios.post("http://localhost:4000/api/patient/appointments", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
