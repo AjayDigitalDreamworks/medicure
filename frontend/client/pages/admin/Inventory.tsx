@@ -51,7 +51,7 @@ export default function Inventory() {
 
   const fetchInventory = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/admin/inventory");
+      const res = await axios.get("https://medicure-57ts.onrender.com/api/admin/inventory");
       setItems(res.data);
     } catch (err) {
       console.error("Error fetching inventory:", err);
@@ -95,7 +95,7 @@ export default function Inventory() {
         capacity: Number(form.capacity),
         reorderLevel: Number(form.reorderLevel),
       };
-      const res = await axios.post("http://localhost:4000/api/admin/inventory", payload);
+      const res = await axios.post("https://medicure-57ts.onrender.com/api/admin/inventory", payload);
       setItems((prev) => [res.data, ...prev]);
       setAddModalOpen(false);
       setForm({ name: "", category: "", unit: "", stock: "", capacity: "", reorderLevel: "" });
@@ -110,7 +110,7 @@ export default function Inventory() {
     if (!currentEdit) return;
     try {
       const newStock = currentEdit.stock + adjustValue;
-      const res = await axios.put(`http://localhost:4000/api/admin/inventory/${currentEdit._id}`, { stock: newStock });
+      const res = await axios.put(`https://medicure-57ts.onrender.com/api/admin/inventory/${currentEdit._id}`, { stock: newStock });
       setItems((prev) => prev.map(i => i._id === res.data._id ? res.data : i));
       setAdjustValue(0);
       setCurrentEdit(null);

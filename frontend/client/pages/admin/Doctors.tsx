@@ -34,8 +34,8 @@ export default function Doctors() {
     const fetchData = async () => {
       try {
         const [docsRes, kpisRes] = await Promise.all([
-          axios.get("http://localhost:4000/api/admin/doctors", config),
-          axios.get("http://localhost:4000/api/admin/doctors/kpis", config)
+          axios.get("https://medicure-57ts.onrender.com/api/admin/doctors", config),
+          axios.get("https://medicure-57ts.onrender.com/api/admin/doctors/kpis", config)
         ]);
         setDoctors(docsRes.data);
         setKpis(kpisRes.data);
