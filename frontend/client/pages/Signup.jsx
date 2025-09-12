@@ -28,7 +28,7 @@ function Signup() {
 
   // Fetch departments on mount
   useEffect(() => {
-    axios.get('https://medicure-57ts.onrender.com/api/patient/departments')
+    axios.get('http://localhost:4000/api/patient/departments')
       .then(res => setDepartments(res.data))
       .catch(err => console.error('Error fetching departments:', err));
   }, []);
@@ -59,7 +59,7 @@ function Signup() {
     let endpoint = '';
 
     if (form.role === 'doctor') {
-      endpoint = 'https://medicure-57ts.onrender.com/api/auth/register-doctor';
+      endpoint = 'http://localhost:4000/api/auth/register-doctor';
 
       payload.doctorProfile = {
         department: form.department,
@@ -69,7 +69,7 @@ function Signup() {
         consultationFee: Number(form.consultationFee),
       };
     } else if (form.role === 'patient') {
-      endpoint = 'https://medicure-57ts.onrender.com/api/auth/register-patient';
+      endpoint = 'http://localhost:4000/api/auth/register-patient';
       payload.patientProfile = {}; // Optional, you can add more fields later
     } else {
       return setError('Invalid role selected');
@@ -98,8 +98,8 @@ function Signup() {
         <div className="background-illustration"></div>
 
         <form
-          className="card p-4 shadow-sm rounded-3 position-absolute text-center"
-          style={{ minWidth: '320px', maxWidth: '400px', zIndex: 2 }}
+          className="card p-4 shadow-sm rounded-3 text-center"
+          style={{ minWidth: '500px', maxWidth: '700px', zIndex: 2 }}
           onSubmit={handleSubmit}
         >
           <h2 className="fw-bold mb-1">Create an Account</h2>

@@ -20,7 +20,7 @@ const handleSubmit = async e => {
   e.preventDefault();
   try {
     const res = await axios.post(
-      'https://medicure-57ts.onrender.com/api/auth/login',
+      'http://localhost:4000/api/auth/login',
       form,
       { withCredentials: true }
     );
@@ -63,7 +63,7 @@ const handleSubmit = async e => {
           onSubmit={handleSubmit}
         >
           <div className="text-success fs-3 mb-3">&#10038;</div>
-          <h2 className="fw-bold mb-1">SmartHosp</h2>
+          <h2 className="fw-bold mb-1">MEDICURE</h2>
           <p className="text-secondary mb-4">Welcome back! Please login to your account.</p>
 
           {error && <p className="text-danger small">{error}</p>}

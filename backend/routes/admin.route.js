@@ -242,3 +242,42 @@ router.put('/beds/:id/discharge', dischargeBed);
 
 
 export default router;
+
+
+
+// Approve doctor by admin (sets user.approved = true and doctorIdVerified)
+router.post('/doctor/:id/approve', authenticateJWT, async (req, res) => {
+  try {
+    if(!req.user || req.user.role !== 'admin') return res.status(403).json({error:'Admin only'});
+    const { id } = req.params;
+    const userModel = (await import('../models/User.js')).User;
+    const doc = await userModel.findById(id);
+    if(!doc) return res.status(404).json({error:'Doctor not found'});
+    doc.approved = true;
+    doc.doctorIdVerified = true;
+    await doc.save();
+    res.json({message:'Doctor approved', doctor: {id: doc._id, email: doc.email, approved: doc.approved}});
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({error: err.message});
+  }
+});
+
+// Schedule delayed notification email (admin)
+// body: { to, subject, html, delayMs }
+router.post('/schedule-email', authenticateJWT, async (req, res) => {
+  try {
+    if(!req.user || req.user.role !== 'admin') return res.status(403).json({error:'Admin only'});
+    const { to, subject, html, delayMs } = req.body;
+    if(!to || !subject || !html || !delayMs) return res.status(400).json({error:'Missing fields'});
+    const sendEmail = (await import('../utils/sendEmail.js')).default;
+    // schedule with setTimeout (not persistent across restarts)
+    setTimeout(() => {
+      sendEmail(to, subject, html);
+    }, parseInt(delayMs));
+    res.json({message:'Email scheduled'});
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({error: err.message});
+  }
+});

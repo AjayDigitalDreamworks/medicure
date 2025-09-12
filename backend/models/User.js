@@ -83,7 +83,11 @@
 
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 import { encryptField, decryptField } from '../utils/crypto.js';
+// import sendEmail from '../utils/sendEmail.js';
+import nodemailer from 'nodemailer';
+
 
 export const ROLES = ['patient', 'doctor', 'admin'];
 
@@ -166,7 +170,7 @@ const UserSchema = new mongoose.Schema({
 
   status: {
     type: String,
-    enum: ['active', 'pending'], // <––– FIX THIS
+    enum: ['active', 'pending'],
     default: 'pending'
   },
 
@@ -181,7 +185,7 @@ const UserSchema = new mongoose.Schema({
 
   patientProfile: {
     type: PatientProfileSchema,
-    required: false, // ✅ Now it’s optional
+    required: false, 
     default: {},
   }
 
@@ -210,17 +214,25 @@ UserSchema.methods.verifyPassword = async function (plain) {
 // --- Register Patient Method ---
 UserSchema.statics.registerPatient = async function ({ name, email, password, phone, patientProfile }) {
   const hash = await bcrypt.hash(password, 12);
+  const verificationToken = crypto.randomBytes(32).toString("hex");
+
   const user = new this({
     name,
     email,
     passwordHash: hash,
     role: 'patient',
-    patientProfile
+    patientProfile,
+    phoneEnc: phone ? encryptField(phone) : undefined,
+    isVerified: false,
+    verificationToken,
+    resetPasswordToken: null,
+    resetPasswordExpires: null,
   });
-  if (phone) user.phone = phone;
+
+  // ✅ Sirf user return karo, email sending aur res handling route me hogi
   return user.save();
 };
-
+ 
 //
 // --- Register Doctor Method ---
 UserSchema.statics.registerDoctor = async function ({ name, email, password, phone, doctorProfile }) {

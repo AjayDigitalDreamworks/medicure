@@ -28,6 +28,11 @@ const jwtOptions = {
 // -------------------------------
 
 
+function isValidEmail(email) {
+  const emailRegex =
+    /^[\w.-]+@(gmail\.com|hotmail\.com|outlook\.com|yahoo\.com|icloud\.com|acem.edu\.in)$/i;
+  return emailRegex.test(email);
+}
 
 router.post('/register-patient', async (req, res) => {
   try {
@@ -39,10 +44,16 @@ router.post('/register-patient', async (req, res) => {
   return res.status(400).json({ error: 'Missing required fields' });
 }
 
+ if (!isValidEmail(email)) {
+      return res.render("login", { msg: "Error: Use a valid Email ID!" });
+    }
+
     const existing = await User.findOne({ email });
     if (existing) {
       return res.status(400).json({ error: 'Email already registered' });
     }
+
+    // const verificationToken = crypto.randomBytes(32).toString("hex");
 
     const newUser = await User.registerPatient({ name, email, password, phone });
 
@@ -51,6 +62,29 @@ router.post('/register-patient', async (req, res) => {
   } catch (err) {
     console.error('Register error:', err);
     res.status(500).json({ error: 'Registration failed' , error: err.message });
+  }
+});
+
+router.get("/verify-email", async (req, res) => {
+  const { token } = req.query;
+
+  try {
+    const user = await User.findOne({ verificationToken: token });
+
+    if (!user) {
+      return res.render("login", { msg: "Error: Invalid or expired token." });
+    }
+
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    await user.save();
+
+    return res.render("login", {
+      msg: "Success: Email verified. You can now log in.",
+    });
+  } catch (err) {
+    console.error(err);
+    res.render("login", { msg: "Error: Server error" });
   }
 });
 

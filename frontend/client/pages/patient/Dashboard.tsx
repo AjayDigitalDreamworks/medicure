@@ -41,7 +41,7 @@ useEffect(() => {
         return;
       }
 
-      const res = await axios.get("https://medicure-57ts.onrender.com/api/dashboard", {
+      const res = await axios.get("http://localhost:4000/api/dashboard", {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -71,7 +71,7 @@ const handleAppointmentAction = async (appointmentId, action) => {
    try {
   const token = localStorage.getItem("token");
   const res = await axios.put(
-    `https://medicure-57ts.onrender.com/api/patient/appointments/${appointmentId}/cancel`,
+    `http://localhost:4000/api/patient/appointments/${appointmentId}/cancel`,
     {},
     {
       headers: {

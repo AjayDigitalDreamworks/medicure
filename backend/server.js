@@ -162,6 +162,18 @@ app.use((err, req, res, next) => {
 //  Start Server
 // -----------------------------
 const PORT = process.env.PORT || 5000;
+
+// Added routes for password reset, reports, and scheduling emails
+import passwordRoutes from './routes/password.routes.js';
+import reportRoutes from './routes/report.routes.js';
+
+app.use('/api/password', passwordRoutes);
+app.use('/api/reports', reportRoutes);
+
+
+import doctorRoutes from './routes/doctor.routes.js';
+app.use('/api/doctor', doctorRoutes);
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
