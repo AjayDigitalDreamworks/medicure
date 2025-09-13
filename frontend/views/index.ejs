@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCure - Next-Generation Healthcare Management</title>
+    <meta name="description" content="Revolutionizing hospital operations with intelligent patient queue management, real-time bed allocation, and intelligent inventory systems for today's healthcare infrastructure.">
+    
+    <!-- Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <!-- <link rel="stylesheet" href="style.css"> -->
+     <style>
+      /* CSS Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: #1f2937;
+    background-color: #ffffff;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Color Variables */
+:root {
+    --primary-color: #4ade80;
+    --primary-dark: #22c55e;
+    --secondary-color: #f0fdf4;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --text-muted: #9ca3af;
+    --border-color: #e5e7eb;
+    --white: #ffffff;
+    --emergency-color: #ef4444;
+}
+
+/* Navigation */
+.navbar {
+    background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 4rem;
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--text-primary);
+}
+
+.nav-logo i {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-link.active {
+    color: var(--primary-color);
+}
+
+.nav-link:hover {
+    color: var(--text-primary);
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.btn-login {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+    background: #f9fafb;
+}
+
+.user-icon {
+    color: var(--text-muted);
+    font-size: 1.5rem;
+}
+
+.mobile-menu-btn {
+    display: none;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    padding: 6rem 0 8rem;
+}
+
+.hero-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero-badge {
+    color: var(--primary-color);
+    font-weight: 500;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1.5rem;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+}
+
+.text-primary {
+    color: var(--primary-color);
+}
+
+.hero-description {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: 3rem;
+    line-height: 1.6;
+}
+
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn-primary, .btn-secondary, .btn-emergency {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 1.125rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+.btn-secondary {
+    background: white;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+.btn-secondary:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-emergency {
+    background: var(--emergency-color);
+    color: white;
+}
+
+.btn-doctor{
+   display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 1.125rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-emer{
+  position: fixed !important;
+}
+
+.btn-emergency:hover {
+    background: #dc2626;
+}
+
+/* Statistics Section */
+.statistics {
+    background: white;
+    padding: 4rem 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.stat-item i {
+    color: var(--primary-color);
+    font-size: 2rem;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* Features Section */
+.features {
+    background: #f9fafb;
+    padding: 5rem 0;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.feature-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+    display: flex;
+    gap: 1rem;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+    background: rgba(74, 222, 128, 0.1);
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.feature-icon i {
+    color: var(--primary-color);
+    font-size: 1.25rem;
+}
+
+.feature-content h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+}
+
+.feature-content p {
+    color: var(--text-secondary);
+}
+
+/* Why Choose Section */
+.why-choose {
+    background: var(--secondary-color);
+    padding: 5rem 0;
+}
+
+.why-choose .section-header p {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-top: 1rem;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.benefit-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.benefit-card:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.benefit-icon {
+    background: rgba(74, 222, 128, 0.1);
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+}
+
+.benefit-icon i {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+}
+
+.benefit-card h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+}
+
+.benefit-card p {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+/* Roles Section */
+.roles {
+    background: white;
+    padding: 5rem 0;
+}
+
+.roles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.role-card {
+    background: #f9fafb;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.role-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.role-avatar {
+    background: var(--primary-color);
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+}
+
+.role-avatar i {
+    color: white;
+    font-size: 1.5rem;
+}
+
+.role-card h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.role-card p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.role-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.role-btn:hover {
+    background: var(--primary-dark);
+}
+
+/* Testimonials Section */
+.testimonials {
+    background: white;
+    padding: 5rem 0;
+}
+
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.testimonial-card {
+    background: rgba(240, 253, 244, 0.3);
+    padding: 2rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border-color);
+}
+
+.quote-icon {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.quote-icon i {
+    font-size: 1.5rem;
+}
+
+.testimonial-card p {
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.author-avatar {
+    background: #e5e7eb;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.author-avatar i {
+    color: var(--text-muted);
+}
+
+.author-name {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.author-title {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* Call to Action Section */
+.cta {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    padding: 5rem 0;
+    color: white;
+    text-align: center;
+}
+
+.cta-content h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.cta-content p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+}
+
+.btn-cta {
+    background: white;
+    color: var(--primary-color);
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 1.125rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-cta:hover {
+    background: #f9fafb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Footer */
+.footer {
+    background: #1e293b;
+    color: white;
+    padding: 4rem 0 2rem;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.footer-column h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.footer-column ul {
+    list-style: none;
+}
+
+.footer-column ul li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-column ul li a {
+    color: #94a3b8;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-column ul li a:hover {
+    color: white;
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-links a {
+    color: #94a3b8;
+    font-size: 1.25rem;
+    transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+    color: white;
+}
+
+.footer-bottom {
+    border-top: 1px solid #374151;
+    padding-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.footer-logo i {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+}
+
+.footer-credits {
+    color: #94a3b8;
+    font-size: 0.875rem;
+}
+
+.footer-credits i {
+    color: #ef4444;
+    margin: 0 0.25rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .nav-menu {
+        display: none;
+    }
+    
+    .mobile-menu-btn {
+        display: block;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .btn-primary, .btn-secondary, .btn-emergency {
+        justify-content: center;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .stat-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .feature-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .benefits-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .roles-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .testimonials-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-bottom {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .benefits-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .section-header h2 {
+        font-size: 2rem;
+    }
+    
+    .cta-content h2 {
+        font-size: 2rem;
+    }
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Button hover animations */
+button, .btn-primary, .btn-secondary, .btn-emergency, .btn-cta, .role-btn {
+    transform: translateY(0);
+    transition: all 0.3s ease;
+}
+
+button:hover, .btn-primary:hover, .btn-secondary:hover, .btn-emergency:hover, .btn-cta:hover, .role-btn:hover {
+    transform: translateY(-1px);
+}
+
+/* Card hover animations */
+.feature-card, .benefit-card, .role-card, .testimonial-card {
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover, .benefit-card:hover, .testimonial-card:hover {
+    transform: translateY(-2px);
+}
+     </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-heartbeat"></i>
+                <span>MEDICURE</span>
+            </div>
+            
+            <div class="nav-menu">
+              <% let role; %>
+              
+              <% if (!isAuthenticated && role == "admin") {%>
+                <a href="/admin/dashboard" class="nav-link active">Dashboard</a>
+                <!-- <a href="#" class="nav-link">OPD Queue</a>
+                <a href="#" class="nav-link">Bed Management</a>
+                <a href="#" class="nav-link">Patient Admission</a> -->
+                <%} else if (!isAuthenticated && role == "Patient") {%>
+                 <a href="/patient/dashboard" class="nav-link active">Dashboard</a>
+                <% }else {%>
+                 
+                 <% } %>
+                 <a href="https://medicure-aichat.onrender.com" class="nav-link">AI Appointment Booking</a>
+                 <a href="https://medicure-report-summary1.onrender.com" class="nav-link">Ai report Analysor</a>
+            </div>
+            <% if (!isAuthenticated) { %>
+            <div class="nav-actions">
+                <a href="/api/auth/login"><button class="btn-login">Login</button></a>
+                <i class="fas fa-user-circle user-icon"></i>
+            </div>
+             <% }else{ %>
+
+               <a href="/api/auth/logout"><button class="btn-login">Logout</button></a>
+       <% } %>
+            <!-- Mobile menu button -->
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">WELCOME TO</div>
+                <h1 class="hero-title">
+                    Next-Generation <span class="text-primary">Healthcare Management</span>
+                </h1>
+                <p class="hero-description">
+                    Revolutionizing hospital operations with intelligent patient queue management, real-time bed
+                    allocation, and intelligent inventory systems for today's healthcare infrastructure.
+                </p>
+                
+                <div class="hero-buttons">
+                    <a href="/patient/dashboard"><button class="btn-primary">
+                        <i class="fas fa-user-injured"></i>
+                        PATIENT
+                    </button></a>
+                    <a href="/admin/dashboard">
+                       <button class="btn-secondary">
+                        <i class="fas fa-user-md"></i>
+                        ADMIN
+                    </button>
+                    </a>
+                   
+                    <a href="/doctor/dashboard"><button class="btn-doctor ">
+                        <i class="fas fa-doctor"></i>
+                        Doctor
+                    </button></a>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+                    <a href="https://medicure-emergency.onrender.com/"><button class="btn-emergency btn-emer">
+                        <i class="fas fa-ambulance"></i>
+                        SOS / Emergency
+                    </button></a>
+    <!-- Statistics Section -->
+    <section class="statistics">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <i class="fas fa-users"></i>
+                    <div class="stat-content">
+                        <div class="stat-number">2,847</div>
+                        <div class="stat-label">Active Patients</div>
+                    </div>
+                </div>
+                
+                <div class="stat-item">
+                    <i class="fas fa-bed"></i>
+                    <div class="stat-content">
+                        <div class="stat-number">156</div>
+                        <div class="stat-label">Available Beds</div>
+                    </div>
+                </div>
+                
+                <div class="stat-item">
+                    <i class="fas fa-clock"></i>
+                    <div class="stat-content">
+                        <div class="stat-number">89</div>
+                        <div class="stat-label">Pending Queue</div>
+                    </div>
+                </div>
+                
+                <div class="stat-item">
+                    <i class="fas fa-chart-line"></i>
+                    <div class="stat-content">
+                        <div class="stat-number">94%</div>
+                        <div class="stat-label">Utilization Rate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Key Features</h2>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>OPD Queue Management</h3>
+                        <p>Streamline outpatient department workflows and reduce patient waiting times with intelligent queuing systems. Enhance patient satisfaction by providing real-time updates and efficient routing.</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Bed Availability Tracker</h3>
+                        <p>Optimize hospital resource allocation with a real-time bed management system. Quickly identify available beds, assign patients, and manage occupancy to improve operational efficiency and patient flow.</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Admission Process Simplified</h3>
+                        <p>Automate and digitize the patient admission process, reducing paperwork and administrative burden. Ensure quick and accurate data entry for a seamless patient onboarding experience from arrival to room assignment.</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Doctor & Department Dashboard</h3>
+                        <p>Provide healthcare professionals with personalized dashboards to monitor patient loads, track appointments, and departmental performance. Empower them with insights for better decision-making and improved patient care coordination.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose MediCure Section -->
+    <section class="why-choose">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Choose <span class="text-primary">MediCure</span>?</h2>
+                <p>Empowering modern healthcare with intelligent digital solutions</p>
+            </div>
+            
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Reduced Wait Times</h3>
+                    <p>Optimize patient flow and cut wait times by up to <strong>40%</strong>.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Improved Efficiency</h3>
+                    <p>Automate daily tasks to boost staff productivity and workflow.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-shield-heart"></i>
+                    </div>
+                    <h3>Better Patient Care</h3>
+                    <p>Deliver a smoother, personalized patient experience.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Data-Driven Insights</h3>
+                    <p>Use real-time data to make smarter clinical and admin decisions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Role-based Sections -->
+    <section class="roles">
+        <div class="container">
+            <div class="section-header">
+                <h2>MediCure for Every Role</h2>
+            </div>
+            
+            <div class="roles-grid">
+                <div class="role-card">
+                    <div class="role-avatar">
+                        <i class="fas fa-user-injured"></i>
+                    </div>
+                    <h3>For Patients</h3>
+                    <p>Book appointments, check queue status, and manage health records efficiently.</p>
+                    <button class="role-btn">Patient Login</button>
+                </div>
+
+                <div class="role-card">
+                    <div class="role-avatar">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h3>For Doctors</h3>
+                    <p>Manage appointments, access patient records, and optimize your schedule.</p>
+                    <button class="role-btn">Doctor Login</button>
+                </div>
+
+                <div class="role-card">
+                    <div class="role-avatar">
+                        <i class="fas fa-user-cog"></i>
+                    </div>
+                    <h3>For Administrators</h3>
+                    <p>Monitor hospital resources and operations from a centralized dashboard.</p>
+                    <button class="role-btn">Admin Login</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What Our Users Say -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2>What Our Users Say</h2>
+            </div>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="quote-icon">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <p>MediCure has revolutionized our patient management. The OPD queue system has saved us hours daily and drastically improved patient satisfaction. It's truly a game-changer for our workflows.</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <div class="author-name">Dr. Priya Sharma</div>
+                            <div class="author-title">Head of Operations, City Hospital</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="quote-icon">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <p>The real-time bed tracker is a game-changer for our emergency department. We can now allocate resources much more efficiently, reducing wait times significantly for critical patients.</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <div class="author-name">Mr. Rajesh Kumar</div>
+                            <div class="author-title">Hospital Administrator, Apex Medical</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="quote-icon">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <p>Implementing MediCure simplified our entire admission process. The digital forms and streamlined workflow have made patient onboarding faster and more accurate than ever before.</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <div class="author-name">Ms. Anjali Singh</div>
+                            <div class="author-title">Admissions Manager, Global Health</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Experience Healthcare Management Reimagined</h2>
+                <p>MediCure is more than just software; it's a commitment to efficiency, clarity, and exceptional patient care.</p>
+                <button class="btn-cta">Get Started Today</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Product</h3>
+                    <ul>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Integrations</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">API Docs</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Follow Us</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>MediCure</span>
+                </div>
+                <div class="footer-credits">
+                    <p>&copy; 2025 MediCure. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

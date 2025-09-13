@@ -1,0 +1,346 @@
+/* Booking Page Specific Styles */
+:root {
+    --primary-green: #00b894;
+    --secondary-green: #17a2b8;
+    --light-green: #e8f5e8;
+    --success-green: #28a745;
+    --danger-red: #dc3545;
+    --warning-orange: #fd7e14;
+    --light-gray: #f8f9fa;
+    --border-gray: #dee2e6;
+    --text-gray: #6c757d;
+    --dark-text: #212529;
+}
+
+/* Top Bar Enhancements */
+.notification-icon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-gray);
+    font-size: 0.9rem;
+}
+
+.notification-icon i {
+    font-size: 1.1rem;
+}
+
+.profile-avatar img {
+    width: 40px;
+    height: 40px;
+}
+
+/* Booking Container */
+.booking-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.booking-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--dark-text);
+    margin-bottom: 0.5rem;
+}
+
+.booking-subtitle {
+    color: var(--text-gray);
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+/* Form Sections */
+.form-section {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border: 1px solid var(--border-gray);
+}
+
+.section-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--dark-text);
+    margin-bottom: 1rem;
+}
+
+/* Form Controls */
+.form-control {
+    border: 1px solid var(--border-gray);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background: #fafbfc;
+}
+
+.form-control:focus {
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.1);
+    outline: none;
+    background: white;
+}
+
+.form-control::placeholder {
+    color: var(--text-gray);
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+/* Date & Time Section */
+.datetime-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.date-input-wrapper {
+    position: relative;
+}
+
+.date-input-wrapper i {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-gray);
+}
+
+.date-input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark-text);
+    font-size: 0.9rem;
+}
+
+/* Calendar Widget */
+.calendar-widget {
+    margin-top: 1rem;
+    border: 1px solid var(--border-gray);
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #fafbfc;
+    border-bottom: 1px solid var(--border-gray);
+}
+
+.month-year {
+    font-weight: 600;
+    color: var(--dark-text);
+}
+
+.btn-nav {
+    background: none;
+    border: none;
+    color: var(--text-gray);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.btn-nav:hover {
+    background: var(--light-green);
+    color: var(--primary-green);
+}
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: #fafbfc;
+    border-bottom: 1px solid var(--border-gray);
+}
+
+.weekday {
+    padding: 8px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-gray);
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar-day {
+    padding: 12px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #f1f3f4;
+    border-right: 1px solid #f1f3f4;
+}
+
+.calendar-day:hover {
+    background: var(--light-green);
+    color: var(--primary-green);
+}
+
+.calendar-day.selected {
+    background: var(--primary-green);
+    color: white;
+    font-weight: 600;
+}
+
+.calendar-day.other-month {
+    color: #ccc;
+    background: #fafbfc;
+}
+
+/* Time Selection */
+.appointment-calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-gray);
+}
+
+.appointment-calendar-header span {
+    font-weight: 600;
+    color: var(--dark-text);
+}
+
+.doctor-select {
+    margin-bottom: 1.5rem;
+}
+
+.time-slots-section h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark-text);
+    margin-bottom: 1rem;
+}
+
+.time-slots-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.time-slot {
+    padding: 8px 12px;
+    text-align: center;
+    border: 1px solid var(--border-gray);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+    font-weight: 500;
+    background: #fafbfc;
+}
+
+.time-slot:hover {
+    border-color: var(--primary-green);
+    background: var(--light-green);
+    color: var(--primary-green);
+}
+
+.time-slot.selected {
+    background: var(--primary-green);
+    color: white;
+    border-color: var(--primary-green);
+}
+
+/* Your Details Section */
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* Identity Proof Section */
+.upload-area {
+    border: 2px dashed var(--border-gray);
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fafbfc;
+}
+
+.upload-area:hover {
+    border-color: var(--primary-green);
+    background: var(--light-green);
+}
+
+.upload-icon i {
+    font-size: 2rem;
+    color: var(--text-gray);
+    margin-bottom: 0.5rem;
+}
+
+.upload-text {
+    color: var(--text-gray);
+    font-weight: 500;
+    margin: 0;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+}
+
+.file-input {
+    display: none;
+}
+
+/* Confirm Button */
+.confirm-appointment-btn {
+    background: var(--primary-green);
+    color: white;
+    border: none;
+    padding: 12px 3rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.confirm-appointment-btn:hover {
+    background: #00a085;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 184, 148, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .datetime-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .time-slots-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .booking-title {
+        font-size: 1.5rem;
+    }
+    
+    .form-section {
+        padding: 1rem;
+    }
+}

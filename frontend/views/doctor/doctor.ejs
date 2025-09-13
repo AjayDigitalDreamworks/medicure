@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MEDICURE - Doctor Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="/css/doctor-dashboard.css" rel="stylesheet" />
+  <!-- Axios -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div class="dashboard-container">
+
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-left">
+      <h1 class="medicure-logo">
+        <i class="fas fa-heartbeat"></i> MEDICURE
+      </h1>
+    </div>
+    <div class="header-center">
+      <div class="doctor-profile">
+        <img src="https://randomuser.me/portraits/men/1.jpg" alt="Dr. Sanjay" class="doctor-avatar">
+        <div class="doctor-info">
+          <h3>Dr. Sanjay</h3>
+          <p>Cardiologist, MD</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="notification-btn"><i class="bi bi-bell"></i></button>
+      <button class="settings-btn"><i class="bi bi-gear"></i></button>
+    </div>
+  </header>
+
+  <!-- Stats Section -->
+  <div class="stats-section">
+    <div class="stat-card">
+      <div class="stat-icon appointments"><i class="bi bi-calendar3"></i></div>
+      <div class="stat-content">
+        <h2>0</h2>
+        <p class="stat-title">Appointments Today</p>
+        <span class="stat-change positive">+0 since yesterday</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon consulted"><i class="bi bi-check-circle"></i></div>
+      <div class="stat-content">
+        <h2>0</h2>
+        <p class="stat-title">Consulted Today</p>
+        <span class="stat-change positive">+0 since yesterday</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon pending"><i class="bi bi-hourglass-split"></i></div>
+      <div class="stat-content">
+        <h2>0</h2>
+        <p class="stat-title">Pending Patients</p>
+        <span class="stat-change negative">0 pending</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Upcoming Patients -->
+    <div class="upcoming-patients">
+      <h3>Upcoming Patients</h3>
+      <div class="patients-table">
+        <table>
+          <thead>
+            <tr><th>Patient</th><th>Time</th><th>Reason</th></tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="3">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Current Patient -->
+    <div class="current-patient">
+      <h3>Current Patient Details</h3>
+      <div class="patient-details">
+        <p>Loading current patient...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Section -->
+  <div class="bottom-section">
+    <!-- Availability & Scheduling -->
+    <div class="availability-scheduling">
+      <h3>Availability & Scheduling</h3>
+      <div class="calendar-widget">
+        <div class="calendar-header">
+          <button class="btn-nav" id="prevMonth"><i class="bi bi-chevron-left"></i></button>
+          <span class="month-year">September 2025</span>
+          <button class="btn-nav" id="nextMonth"><i class="bi bi-chevron-right"></i></button>
+        </div>
+        <div class="calendar-grid">
+          <div class="day-header">Su</div><div class="day-header">Mo</div><div class="day-header">Tu</div>
+          <div class="day-header">We</div><div class="day-header">Th</div><div class="day-header">Fr</div><div class="day-header">Sa</div>
+          <!-- Example days -->
+          <div class="calendar-day other-month">31</div>
+          <div class="calendar-day selected">1</div>
+          <div class="calendar-day">2</div><div class="calendar-day">3</div>
+          <div class="calendar-day">4</div><div class="calendar-day">5</div><div class="calendar-day">6</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Availability Options -->
+    <div class="day-availability">
+      <h3>Availability For The Day</h3>
+      <div class="availability-options">
+        <div class="availability-option"><div class="availability-indicator full-day"></div><span>Full Day</span></div>
+        <div class="availability-option"><div class="availability-indicator am-only"></div><span>AM Only</span></div>
+        <div class="availability-option"><div class="availability-indicator pm-only"></div><span>PM Only</span></div>
+        <div class="availability-option"><div class="availability-indicator unavailable"></div><span>Unavailable</span></div>
+      </div>
+      <div class="availability-buttons">
+        <button class="availability-btn" data-type="full">Set Full Day</button>
+        <button class="availability-btn" data-type="am">Set AM Only</button>
+        <button class="availability-btn" data-type="pm">Set PM Only</button>
+        <button class="availability-btn unavailable-btn" data-type="unavailable">Set Unavailable</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ================== Fetch Stats ==================
+axios.get("http://localhost:5000/api/doctor/stats")
+  .then(res => {
+    const stats = res.data.stats;
+    document.querySelectorAll(".stat-card")[0].querySelector("h2").textContent = stats.todaysAppointments || 0;
+    document.querySelectorAll(".stat-card")[1].querySelector("h2").textContent = stats.prescriptionsGiven || 0;
+    document.querySelectorAll(".stat-card")[2].querySelector("h2").textContent = (stats.totalAppointments - stats.prescriptionsGiven) || 0;
+  })
+  .catch(err => console.error("Stats error:", err));
+
+// ================== Fetch Today's Appointments ==================
+axios.get("http://localhost:5000/api/doctor/appointments/today")
+  .then(res => {
+    const tbody = document.querySelector(".patients-table tbody");
+    tbody.innerHTML = "";
+    if (!res.data.appointments || res.data.appointments.length === 0) {
+      tbody.innerHTML = "<tr><td colspan='3'>No appointments today</td></tr>";
+      return;
+    }
+    res.data.appointments.forEach(appt => {
+      tbody.innerHTML += `
+        <tr>
+          <td><div class="patient-info"><strong>${appt.patient.name}</strong><span>${appt.patient.age} years old</span></div></td>
+          <td>${new Date(appt.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
+          <td>${appt.reason || "General Consultation"}</td>
+        </tr>`;
+    });
+  })
+  .catch(err => console.error("Appointments error:", err));
+
+// ================== Fetch Current Patient ==================
+function loadCurrentPatient() {
+  axios.get("http://localhost:5000/api/doctor/current-patient")
+    .then(res => {
+      const current = res.data.currentPatient;
+      const detailsDiv = document.querySelector(".current-patient .patient-details");
+      if (!current) {
+        detailsDiv.innerHTML = "<p>No current patient in progress</p>";
+        return;
+      }
+      detailsDiv.innerHTML = `
+        <div class="detail-item"><strong>Name:</strong> ${current.name}</div>
+        <div class="detail-item"><strong>Age:</strong> ${current.age}</div>
+        <div class="detail-item"><strong>Gender:</strong> ${current.gender}</div>
+        <div class="detail-item"><strong>Reason:</strong> ${current.appointment.reason}</div>
+        <div class="detail-item"><strong>Medical History:</strong> ${current.reports.length ? current.reports.join(", ") : "No records"}</div>
+        <div class="patient-actions">
+          <button class="btn-view-records">View Records</button>
+          <button class="btn-end-session">End Session</button>
+        </div>`;
+      document.querySelector(".btn-view-records").addEventListener("click", () => {
+        alert("Opening records for " + current.name);
+      });
+      document.querySelector(".btn-end-session").addEventListener("click", () => {
+        if (confirm("End session for " + current.name + "?")) {
+          axios.post("http://localhost:5000/api/doctor/next-patient").then(() => {
+            loadCurrentPatient();
+          });
+        }
+      });
+    })
+    .catch(err => console.error("Current patient error:", err));
+}
+loadCurrentPatient();
+
+// ================== Availability ==================
+document.querySelectorAll('.calendar-day').forEach(day => {
+  day.addEventListener('click', function() {
+    if (!this.classList.contains('other-month')) {
+      document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+      this.classList.add('selected');
+    }
+  });
+});
+document.querySelectorAll('.availability-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const type = this.dataset.type;
+    document.querySelectorAll('.availability-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    const selectedDate = document.querySelector('.calendar-day.selected').textContent;
+    axios.post("http://localhost:5000/api/doctor/availability", {
+      date: selectedDate,
+      availability: type
+    }).then(() => {
+      alert("Availability set to " + type + " for day " + selectedDate);
+    });
+  });
+});
+</script>
+</body>
+</html>

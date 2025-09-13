@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MEDICURE - OPD Management Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="/css/opd.css" rel="stylesheet" />
+</head>
+<body>
+<div class="dashboard-layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1 class="medicure-logo">
+                <i class="bi bi-hospital"></i> Medicure
+            </h1>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="/admin/dashboard" class="nav-item active">
+                <i class="bi bi-clipboard-data"></i>
+                <span>OPD Management</span>
+            </a>
+            <a href="javascript:[0]" class="nav-item">
+                <i class="bi bi-person-check"></i>
+                <span>Doctor Available</span>
+            </a>
+            <a href="/admin/bed" class="nav-item">
+                <i class="bi bi-hospital"></i>
+                <span>Bed Management</span>
+            </a>
+            <a href="/admin/inventory" class="nav-item">
+                <i class="bi bi-box-seam"></i>
+                <span>Inventory</span>
+            </a>
+            <a href="javascript:[0]" class="nav-item">
+                <i class="bi bi-file-earmark-medical"></i>
+                <span>Upload Medical Record</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="content-header">
+            <div class="header-left">
+                <h1>OPD Management Dashboard</h1>
+            </div>
+            
+            <div class="header-right">
+                <div class="doctor-profile">
+                    <img src="https://randomuser.me/portraits/men/75.jpg" alt="Pranav Dharma" class="doctor-avatar">
+                    <div class="doctor-info">
+                        <h3>Pranav Dharma</h3>
+                        <p>Chief Medical Officer</p>
+                        <span class="email">pranav.dharma@medicure.com</span>
+                        <div class="status-indicator">
+                            <span class="status-dot online"></span>
+                            <span>Online</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="notification-btn">
+                    <i class="bi bi-person-circle"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats Cards -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-icon patients-queue">
+                    <i class="bi bi-people"></i>
+                </div>
+                <div class="stat-content">
+                    <h2>25</h2>
+                    <p class="stat-title">Patients in Queue</p>
+                    <span class="stat-subtitle">Currently waiting</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon available-doctors">
+                    <i class="bi bi-person-check"></i>
+                </div>
+                <div class="stat-content">
+                    <h2>12</h2>
+                    <p class="stat-title">Available Doctors</p>
+                    <span class="stat-subtitle">Ready for consultation</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon wait-time">
+                    <i class="bi bi-clock"></i>
+                </div>
+                <div class="stat-content">
+                    <h2>18 min</h2>
+                    <p class="stat-title">Average Wait Time</p>
+                    <span class="stat-subtitle">For new patients</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon appointments">
+                    <i class="bi bi-calendar-event"></i>
+                </div>
+                <div class="stat-content">
+                    <h2>47</h2>
+                    <p class="stat-title">Upcoming Appointments</p>
+                    <span class="stat-subtitle">Scheduled today</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointment Requests -->
+        <div class="section-card">
+            <div class="section-header">
+                <h3>Appointment Requests</h3>
+                <a href="#" class="view-all-link">View All</a>
+            </div>
+            
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Appointment Time</th>
+                            <th>Doctor Assigned</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Olivia Davis</td>
+                            <td>Today, 09:00 AM</td>
+                            <td>Dr. Alex Sharma</td>
+                            <td><span class="status-badge pending">Pending</span></td>
+                            <td>
+                                <button class="btn-reject">×</button>
+                                <button class="btn-approve">Approve</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>James Wilson</td>
+                            <td>Tomorrow, 10:30 AM</td>
+                            <td>Dr. Sarah Lee</td>
+                            <td><span class="status-badge pending">Pending</span></td>
+                            <td>
+                                <button class="btn-reject">×</button>
+                                <button class="btn-approve">Approve</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Sophia Martinez</td>
+                            <td>Today, 11:00 AM</td>
+                            <td>Dr. John Davis</td>
+                            <td><span class="status-badge approved">Approved</span></td>
+                            <td>
+                                <button class="btn-action secondary">Chat</button>
+                                <button class="btn-action">Manage</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Liam Anderson</td>
+                            <td>Tomorrow, 02:00 PM</td>
+                            <td>Dr. Emily White</td>
+                            <td><span class="status-badge pending">Pending</span></td>
+                            <td>
+                                <button class="btn-reject">×</button>
+                                <button class="btn-approve">Approve</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Isabella Garcia</td>
+                            <td>Today, 03:00 PM</td>
+                            <td>Dr. Alex Sharma</td>
+                            <td><span class="status-badge rejected">Rejected</span></td>
+                            <td>
+                                <button class="btn-action">Manage</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Noah Rodriguez</td>
+                            <td>Tomorrow, 09:30 AM</td>
+                            <td>Dr. Sarah Lee</td>
+                            <td><span class="status-badge pending">Pending</span></td>
+                            <td>
+                                <button class="btn-reject">×</button>
+                                <button class="btn-approve">Approve</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- OPD Queue Details -->
+        <div class="section-card">
+            <div class="section-header">
+                <h3>OPD Queue Details</h3>
+                <div class="section-actions">
+                    <button class="btn-add-queue">+ Add To Queue</button>
+                    <a href="#" class="view-all-link">View All</a>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Token</th>
+                            <th>Patient Name</th>
+                            <th>Wait Time</th>
+                            <th>Doctor</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>OPD-001</td>
+                            <td>Alice Johnson</td>
+                            <td>15 min</td>
+                            <td>Dr. Emily White</td>
+                            <td><span class="status-badge waiting">Waiting</span></td>
+                        </tr>
+                        <tr>
+                            <td>OPD-002</td>
+                            <td>Bob Williams</td>
+                            <td>25 min</td>
+                            <td>Dr. John Davis</td>
+                            <td><span class="status-badge consultation">In Consultation</span></td>
+                        </tr>
+                        <tr>
+                            <td>OPD-003</td>
+                            <td>Charlie Brown</td>
+                            <td>0 min</td>
+                            <td>Dr. Sarah Lee</td>
+                            <td><span class="status-badge completed">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td>OPD-004</td>
+                            <td>Diana Miller</td>
+                            <td>5 min</td>
+                            <td>Dr. Emily White</td>
+                            <td><span class="status-badge waiting">Waiting</span></td>
+                        </tr>
+                        <tr>
+                            <td>OPD-005</td>
+                            <td>Ethan Clark</td>
+                            <td>10 min</td>
+                            <td>Dr. John Davis</td>
+                            <td><span class="status-badge waiting">Waiting</span></td>
+                        </tr>
+                        <tr>
+                            <td>OPD-006</td>
+                            <td>Fiona Green</td>
+                            <td>0 min</td>
+                            <td>Dr. Sarah Lee</td>
+                            <td><span class="status-badge cancelled">Cancelled</span></td>
+                        </tr>
+                        <tr>
+                            <td>OPD-007</td>
+                            <td>George King</td>
+                            <td>30 min</td>
+                            <td>Dr. Emily White</td>
+                            <td><span class="status-badge consultation">In Consultation</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Bottom Section -->
+        <div class="bottom-section">
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <h3>Quick Actions</h3>
+                <div class="actions-list">
+                    <div class="action-item">
+                        <i class="bi bi-calendar-plus"></i>
+                        <span>Schedule New Appointment</span>
+                    </div>
+                    <div class="action-item">
+                        <i class="bi bi-person-plus"></i>
+                        <span>Admit Patient</span>
+                    </div>
+                    <div class="action-item">
+                        <i class="bi bi-prescription2"></i>
+                        <span>Diagnose Medication</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Schedule -->
+            <div class="upcoming-schedule">
+                <h3>Upcoming Schedule</h3>
+                <div class="schedule-list">
+                    <div class="schedule-item">
+                        <div class="schedule-icon">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <div class="schedule-info">
+                            <h4>Staff Meeting - Conference Room 3</h4>
+                            <p>02:00 PM</p>
+                        </div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-icon">
+                            <i class="bi bi-person-check"></i>
+                        </div>
+                        <div class="schedule-info">
+                            <h4>Dr. Smith - Patient Rounds</h4>
+                            <p>04:30 PM</p>
+                        </div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-icon">
+                            <i class="bi bi-box-seam"></i>
+                        </div>
+                        <div class="schedule-info">
+                            <h4>Inventory Check - Pharmacy</h4>
+                            <p>04:30 PM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="dashboard-footer">
+            <div class="footer-links">
+                <a href="#">Resources</a>
+                <a href="#">Legal</a>
+            </div>
+            <div class="footer-social">
+                <i class="bi bi-facebook"></i>
+                <i class="bi bi-twitter"></i>
+                <i class="bi bi-linkedin"></i>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Interactive functionality
+document.querySelectorAll('.btn-approve').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const row = this.closest('tr');
+        const statusBadge = row.querySelector('.status-badge');
+        statusBadge.textContent = 'Approved';
+        statusBadge.className = 'status-badge approved';
+        
+        const actionCell = row.querySelector('td:last-child');
+        actionCell.innerHTML = `
+            <button class="btn-action secondary">Chat</button>
+            <button class="btn-action">Manage</button>
+        `;
+    });
+});
+
+document.querySelectorAll('.btn-reject').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const row = this.closest('tr');
+        const statusBadge = row.querySelector('.status-badge');
+        statusBadge.textContent = 'Rejected';
+        statusBadge.className = 'status-badge rejected';
+        
+        const actionCell = row.querySelector('td:last-child');
+        actionCell.innerHTML = `<button class="btn-action">Manage</button>`;
+    });
+});
+
+// Add to queue functionality
+document.querySelector('.btn-add-queue').addEventListener('click', function() {
+    alert('Add to queue functionality - would open a modal to add new patient to queue');
+});
+
+// Quick actions
+document.querySelectorAll('.action-item').forEach(item => {
+    item.addEventListener('click', function() {
+        const actionName = this.querySelector('span').textContent;
+        alert(`Opening ${actionName} interface...`);
+    });
+});
+</script>
+</body>
+</html>

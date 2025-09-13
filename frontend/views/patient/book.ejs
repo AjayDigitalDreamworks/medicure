@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MediCure - Book Your Appointment</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="/css/dash-patient.css" rel="stylesheet" />
+    <link href="/css/booking.css" rel="stylesheet" />
+</head>
+<body>
+<div class="d-flex">
+    <!-- Sidebar -->
+    <nav class="sidebar bg-light">
+        <div class="sidebar-header p-3">
+            <h4 class="text-primary fw-bold">
+                <i class="fas fa-heartbeat"></i> Medicure
+            </h4>
+        </div>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="/patient/dashboard">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/patient/bookappointments">
+                    <i class="bi bi-calendar-check"></i> Appointments
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/patient/admission">
+                    <i class="bi bi-person-plus"></i> Admit a patient
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/patient/admission/list">
+                    <i class="bi bi-file-text"></i> Reports
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content flex-grow-1">
+        <div class="top-bar bg-white border-bottom p-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Book Your Appointment</h5>
+            <div class="d-flex align-items-center gap-3">
+                <!-- <div class="notification-icon">
+                    <i class="bi bi-bell"></i>
+                    <span class="notification-text">Notifications</span>
+                </div> -->
+                <div class="profile-avatar">
+                    <!-- <img src="https://via.placeholder.com/40x40/28a745/ffffff?text=A" alt="Profile" class="rounded-circle"> -->
+                     <a class="dropdown-item" href="/api/auth/logout">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-area p-4">
+            <div class="booking-container">
+                <h1 class="booking-title">Book Your Appointment</h1>
+                <p class="booking-subtitle">Select your desired department, doctor, date, and time. Provide your details and any additional notes to secure your booking.</p>
+
+                <form class="booking-form">
+                    <!-- Appointment Type Section -->
+                    <div class="form-section">
+                        <h3 class="section-title">Appointment Type</h3>
+                        <div class="form-group">
+                            <select class="form-control" id="departmentSelect">
+                                <option value="">Select a department</option>
+                                <option value="cardiology">Cardiology</option>
+                                <option value="dermatology">Dermatology</option>
+                                <option value="neurology">Neurology</option>
+                                <option value="orthopedics">Orthopedics</option>
+                                <option value="pediatrics">Pediatrics</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Date & Time Section -->
+                    <div class="form-section">
+                        <h3 class="section-title">Date & Time</h3>
+                        <div class="datetime-container">
+                            <div class="date-selection">
+                                <div class="date-input-group">
+                                    <label for="selectDate">Select Date</label>
+                                    <div class="date-input-wrapper">
+                                        <input type="text" class="form-control" id="selectDate" value="Sun, Aug 31, 2025" readonly>
+                                        <i class="bi bi-calendar3"></i>
+                                    </div>
+                                </div>
+                                
+                                <div class="calendar-widget">
+                                    <div class="calendar-header">
+                                        <button type="button" class="btn-nav" id="prevMonth">
+                                            <i class="bi bi-chevron-left"></i>
+                                        </button>
+                                        <span class="month-year">August 2025</span>
+                                        <button type="button" class="btn-nav" id="nextMonth">
+                                            <i class="bi bi-chevron-right"></i>
+                                        </button>
+                                    </div>
+                                    <div class="calendar-weekdays">
+                                        <div class="weekday">Su</div>
+                                        <div class="weekday">Mo</div>
+                                        <div class="weekday">Tu</div>
+                                        <div class="weekday">We</div>
+                                        <div class="weekday">Th</div>
+                                        <div class="weekday">Fr</div>
+                                        <div class="weekday">Sa</div>
+                                    </div>
+                                    <div class="calendar-days">
+                                        <div class="calendar-day other-month">27</div>
+                                        <div class="calendar-day other-month">28</div>
+                                        <div class="calendar-day other-month">29</div>
+                                        <div class="calendar-day other-month">30</div>
+                                        <div class="calendar-day other-month">31</div>
+                                        <div class="calendar-day">1</div>
+                                        <div class="calendar-day">2</div>
+                                        <div class="calendar-day">3</div>
+                                        <div class="calendar-day">4</div>
+                                        <div class="calendar-day">5</div>
+                                        <div class="calendar-day">6</div>
+                                        <div class="calendar-day">7</div>
+                                        <div class="calendar-day">8</div>
+                                        <div class="calendar-day">9</div>
+                                        <div class="calendar-day">10</div>
+                                        <div class="calendar-day">11</div>
+                                        <div class="calendar-day">12</div>
+                                        <div class="calendar-day">13</div>
+                                        <div class="calendar-day">14</div>
+                                        <div class="calendar-day">15</div>
+                                        <div class="calendar-day">16</div>
+                                        <div class="calendar-day">17</div>
+                                        <div class="calendar-day">18</div>
+                                        <div class="calendar-day">19</div>
+                                        <div class="calendar-day">20</div>
+                                        <div class="calendar-day">21</div>
+                                        <div class="calendar-day">22</div>
+                                        <div class="calendar-day">23</div>
+                                        <div class="calendar-day">24</div>
+                                        <div class="calendar-day">25</div>
+                                        <div class="calendar-day">26</div>
+                                        <div class="calendar-day">27</div>
+                                        <div class="calendar-day">28</div>
+                                        <div class="calendar-day">29</div>
+                                        <div class="calendar-day">30</div>
+                                        <div class="calendar-day selected">31</div>
+                                        <div class="calendar-day other-month">1</div>
+                                        <div class="calendar-day other-month">2</div>
+                                        <div class="calendar-day other-month">3</div>
+                                        <div class="calendar-day other-month">4</div>
+                                        <div class="calendar-day other-month">5</div>
+                                        <div class="calendar-day other-month">6</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="time-selection">
+                                <div class="appointment-calendar-header">
+                                    <span>Appointment Calendar</span>
+                                    <i class="bi bi-calendar3"></i>
+                                </div>
+                                
+                                <div class="doctor-select">
+                                    <select class="form-control" id="doctorSelect">
+                                        <option value="">Select a doctor</option>
+                                        <option value="dr-smith">Dr. Sarah Smith</option>
+                                        <option value="dr-johnson">Dr. Michael Johnson</option>
+                                        <option value="dr-williams">Dr. Emily Williams</option>
+                                    </select>
+                                </div>
+
+                                <div class="time-slots-section">
+                                    <h4>Available Time Slots</h4>
+                                    <div class="time-slots-grid">
+                                        <div class="time-slot">08:30 AM</div>
+                                        <div class="time-slot selected">09:00 AM</div>
+                                        <div class="time-slot">09:30 AM</div>
+                                        <div class="time-slot">10:00 AM</div>
+                                        <div class="time-slot">10:30 AM</div>
+                                        <div class="time-slot">11:00 AM</div>
+                                        <div class="time-slot">11:30 AM</div>
+                                        <div class="time-slot">01:00 PM</div>
+                                        <div class="time-slot">01:30 PM</div>
+                                        <div class="time-slot">02:00 PM</div>
+                                        <div class="time-slot">02:30 PM</div>
+                                        <div class="time-slot">03:30 PM</div>
+                                        <div class="time-slot">04:00 PM</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Your Details Section -->
+                    <div class="form-section">
+                        <h3 class="section-title">Your Details</h3>
+                        <div class="details-grid">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="NAME" id="patientName">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="ADDRESS" id="patientAddress">
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" class="form-control" placeholder="CONTACT NUMBER" id="contactNumber">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="PURPOSE TO VISIT" id="purposeVisit">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Identity Proof Section -->
+                    <div class="form-section">
+                        <h3 class="section-title">IDENTITY PROOF</h3>
+                        <div class="upload-area">
+                            <div class="upload-icon">
+                                <i class="bi bi-upload"></i>
+                            </div>
+                            <p class="upload-text">UPLOAD AN ID PROOF</p>
+                            <input type="file" id="idProof" class="file-input" accept=".pdf,.jpg,.jpeg,.png">
+                        </div>
+                    </div>
+
+                    <!-- Confirm Button -->
+                    <button type="submit" class="confirm-appointment-btn">Confirm Appointment</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Calendar and Date/Time Selection JavaScript
+
+class AppointmentBooking {
+    constructor() {
+        this.currentDate = new Date();
+        this.selectedDate = new Date(2025, 7, 31); // August 31, 2025
+        this.selectedTime = '09:00 AM';
+        this.init();
+    }
+
+    init() {
+        this.setupCalendar();
+        this.setupTimeSlots();
+        this.setupFileUpload();
+        this.setupFormHandlers();
+        this.updateSelectedDate();
+    }
+
+    setupCalendar() {
+        // Calendar day selection
+        document.querySelectorAll('.calendar-day').forEach(day => {
+            day.addEventListener('click', (e) => {
+                if (!day.classList.contains('other-month')) {
+                    // Remove previous selection
+                    document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+                    
+                    // Add selection to clicked day
+                    day.classList.add('selected');
+                    
+                    // Update the date input
+                    const dayNumber = parseInt(day.textContent);
+                    const newDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), dayNumber);
+                    this.selectedDate = newDate;
+                    this.updateSelectedDate();
+                }
+            });
+        });
+
+        // Month navigation
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+            this.generateCalendar();
+        });
+
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+            this.generateCalendar();
+        });
+    }
+
+    setupTimeSlots() {
+        // Time slot selection
+        document.querySelectorAll('.time-slot').forEach(slot => {
+            slot.addEventListener('click', () => {
+                // Remove previous selection
+                document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                
+                // Add selection to clicked slot
+                slot.classList.add('selected');
+                this.selectedTime = slot.textContent;
+                
+                console.log('Selected time:', this.selectedTime);
+            });
+        });
+    }
+
+    setupFileUpload() {
+        // File upload click trigger
+        document.querySelector('.upload-area').addEventListener('click', () => {
+            document.getElementById('idProof').click();
+        });
+
+        // File upload change handler
+        document.getElementById('idProof').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                document.querySelector('.upload-text').textContent = `Selected: ${file.name}`;
+            }
+        });
+    }
+
+    setupFormHandlers() {
+        // Department selection handler
+        document.getElementById('departmentSelect').addEventListener('change', (e) => {
+            console.log('Selected department:', e.target.value);
+            // Here you can add logic to filter doctors based on department
+        });
+
+        // Doctor selection handler
+        document.getElementById('doctorSelect').addEventListener('change', (e) => {
+            console.log('Selected doctor:', e.target.value);
+            // Here you can add logic to update available time slots based on doctor
+        });
+
+        // Form submission
+        document.querySelector('.booking-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.handleFormSubmission();
+        });
+    }
+
+    updateSelectedDate() {
+        const options = { 
+            weekday: 'short', 
+            month: 'short', 
+            day: 'numeric', 
+            year: 'numeric' 
+        };
+        const formattedDate = this.selectedDate.toLocaleDateString('en-US', options);
+        document.getElementById('selectDate').value = formattedDate;
+    }
+
+    generateCalendar() {
+        const year = this.currentDate.getFullYear();
+        const month = this.currentDate.getMonth();
+        
+        // Update month/year display
+        const monthNames = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        document.querySelector('.month-year').textContent = `${monthNames[month]} ${year}`;
+
+        // Get first day of month and number of days
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+        // Clear current calendar
+        const calendarDays = document.querySelector('.calendar-days');
+        calendarDays.innerHTML = '';
+
+        // Add previous month's trailing days
+        for (let i = firstDay - 1; i >= 0; i--) {
+            const day = document.createElement('div');
+            day.className = 'calendar-day other-month';
+            day.textContent = daysInPrevMonth - i;
+            calendarDays.appendChild(day);
+        }
+
+        // Add current month's days
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayElement = document.createElement('div');
+            dayElement.className = 'calendar-day';
+            dayElement.textContent = day;
+            
+            // Check if this is the selected date
+            if (year === this.selectedDate.getFullYear() && 
+                month === this.selectedDate.getMonth() && 
+                day === this.selectedDate.getDate()) {
+                dayElement.classList.add('selected');
+            }
+            
+            calendarDays.appendChild(dayElement);
+        }
+
+        // Add next month's leading days
+        const totalCells = calendarDays.children.length;
+        const remainingCells = 42 - totalCells; // 6 rows × 7 days = 42 cells
+        for (let day = 1; day <= remainingCells; day++) {
+            const dayElement = document.createElement('div');
+            dayElement.className = 'calendar-day other-month';
+            dayElement.textContent = day;
+            calendarDays.appendChild(dayElement);
+        }
+
+        // Re-setup calendar click handlers
+        this.setupCalendar();
+    }
+
+    handleFormSubmission() {
+        // Collect form data
+        const formData = {
+            department: document.getElementById('departmentSelect').value,
+            doctor: document.getElementById('doctorSelect').value,
+            date: this.selectedDate.toISOString().split('T')[0],
+            time: this.selectedTime,
+            name: document.getElementById('patientName').value,
+            address: document.getElementById('patientAddress').value,
+            contact: document.getElementById('contactNumber').value,
+            purpose: document.getElementById('purposeVisit').value,
+            idProof: document.getElementById('idProof').files[0]
+        };
+
+        // Validate required fields
+        if (!formData.department || !formData.doctor || !formData.name || !formData.contact) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+
+        console.log('Appointment Data:', formData);
+        
+        // Here you would typically send the data to your server
+        alert(`Appointment booked successfully!\n\nDetails:\nDepartment: ${formData.department}\nDoctor: ${formData.doctor}\nDate: ${formData.date}\nTime: ${formData.time}\nPatient: ${formData.name}`);
+    }
+
+    // Method to get available time slots (can be customized based on doctor/date)
+    getAvailableTimeSlots(doctor, date) {
+        // This would typically fetch from your backend
+        return [
+            '08:30 AM', '09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM',
+            '11:00 AM', '11:30 AM', '01:00 PM', '01:30 PM', '02:00 PM',
+            '02:30 PM', '03:30 PM', '04:00 PM'
+        ];
+    }
+}
+
+// Initialize the appointment booking system when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    new AppointmentBooking();
+});
+</script>
+</body>
+</html>

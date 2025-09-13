@@ -1,0 +1,686 @@
+<%- include('./partials/sidebar.ejs') %>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-red: #DC3545;
+            --primary-orange: #FD7E14;
+            --primary-blue: #0D6EFD;
+            --primary-green: #198754;
+            --text-primary: #212529;
+            --text-secondary: #6C757D;
+            --text-muted: #ADB5BD;
+            --bg-light: #F8F9FA;
+            --bg-white: #FFFFFF;
+            --border-light: #DEE2E6;
+            --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            transition: all 0.2s ease-in-out;
+        }
+        
+        body {
+            background-color: var(--bg-light);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+        
+        .header-card {
+            background: var(--bg-white);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+            margin-bottom: 32px;
+            padding: 24px;
+        }
+        
+        .logo-icon {
+            color: var(--primary-red);
+            width: 22px;
+            height: 22px;
+        }
+        
+        .logo-text {
+            font-weight: 600;
+            color: var(--primary-red);
+            font-size: 1.1rem;
+        }
+        
+        .warning-icon {
+            color: var(--primary-orange);
+            width: 22px;
+            height: 22px;
+        }
+        
+        .header-title h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+        
+        .metric-card {
+            background: var(--bg-white);
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            border: 2px solid;
+            padding: 24px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        .metric-card.red { border-color: var(--primary-red); }
+        .metric-card.orange { border-color: var(--primary-orange); }
+        .metric-card.blue { border-color: var(--primary-blue); }
+        .metric-card.green { border-color: var(--primary-green); }
+        
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        
+        .metric-card.red::before { background: var(--primary-red); }
+        .metric-card.orange::before { background: var(--primary-orange); }
+        .metric-card.blue::before { background: var(--primary-blue); }
+        .metric-card.green::before { background: var(--primary-green); }
+        
+        .metric-value {
+            font-size: 2.75rem;
+            font-weight: 700;
+            margin: 12px 0 8px 0;
+            line-height: 1;
+        }
+        
+        .metric-card.red .metric-value { color: var(--primary-red); }
+        .metric-card.orange .metric-value { color: var(--primary-orange); }
+        .metric-card.blue .metric-value { color: var(--primary-blue); }
+        .metric-card.green .metric-value { color: var(--primary-green); }
+        
+        .metric-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+        
+        .metric-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+        
+        .metric-icon {
+            opacity: 0.8;
+        }
+        
+        .nav-tabs {
+            border-bottom: 2px solid var(--border-light);
+            margin-bottom: 32px;
+        }
+        
+        .nav-tabs .nav-link {
+            border: none;
+            color: var(--text-secondary);
+            background: none;
+            padding: 12px 24px;
+            font-weight: 500;
+            border-radius: 8px 8px 0 0;
+            margin-right: 8px;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            color: var(--text-primary);
+            background-color: rgba(13, 110, 253, 0.1);
+        }
+        
+        .nav-tabs .nav-link.active {
+            background-color: var(--primary-blue);
+            color: white;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .action-card {
+            background: var(--bg-white);
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .action-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        .action-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+        }
+        
+        .action-icon.red { color: var(--primary-red); }
+        .action-icon.orange { color: var(--primary-orange); }
+        .action-icon.blue { color: var(--primary-blue); }
+        
+        .btn-red { 
+            background-color: var(--primary-red); 
+            border-color: var(--primary-red);
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 10px 20px;
+        }
+        .btn-orange { 
+            background-color: var(--primary-orange); 
+            border-color: var(--primary-orange);
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 10px 20px;
+        }
+        .btn-blue { 
+            background-color: var(--primary-blue); 
+            border-color: var(--primary-blue);
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 10px 20px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-red);
+            border-color: var(--primary-red);
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 10px 20px;
+        }
+        
+        .btn-outline-secondary {
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 10px 16px;
+        }
+        
+        .activity-item {
+            background: var(--bg-white);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+            padding: 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .activity-item:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+        
+        .activity-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            font-size: 18px;
+        }
+        
+        .icon-critical { 
+            background-color: rgba(220, 53, 69, 0.1); 
+            color: var(--primary-red);
+        }
+        .icon-urgent { 
+            background-color: rgba(253, 126, 20, 0.1); 
+            color: var(--primary-orange);
+        }
+        .icon-monitoring { 
+            background-color: rgba(13, 110, 253, 0.1); 
+            color: var(--primary-blue);
+        }
+        
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        
+        .status-badge.critical { 
+            background-color: rgba(220, 53, 69, 0.1); 
+            color: var(--primary-red);
+        }
+        .status-badge.urgent { 
+            background-color: rgba(253, 126, 20, 0.1); 
+            color: var(--primary-orange);
+        }
+        .status-badge.monitoring { 
+            background-color: rgba(13, 110, 253, 0.1); 
+            color: var(--primary-blue);
+        }
+        
+        .activity-time {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-left: 12px;
+            font-weight: 500;
+        }
+        
+        .activity-details h6 {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        
+        .activity-details p {
+            color: var(--text-secondary);
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 24px;
+        }
+        
+        .modal-content {
+            border-radius: 16px;
+            border: none;
+            box-shadow: var(--shadow);
+        }
+        
+        .modal-header {
+            border-bottom: 1px solid var(--border-light);
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            padding: 12px 16px;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+        
+        @media (max-width: 768px) {
+            .header-card {
+                padding: 16px;
+            }
+            
+            .metric-card {
+                padding: 20px;
+            }
+            
+            .metric-value {
+                font-size: 2.25rem;
+            }
+            
+            .action-card {
+                padding: 20px;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <!-- Header -->
+        <div class="header-card p-4">
+            <div class="row align-items-center">
+                <div class="col-md-6 d-flex align-items-center">
+                    <div class="d-flex align-items-center me-4">
+                        <i data-feather="activity" class="logo-icon me-2"></i>
+                        <span class="logo-text">logo</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i data-feather="alert-triangle" class="warning-icon me-2"></i>
+                        <h1 class="mb-0 h3">Emergency Management</h1>
+                    </div>
+                </div>
+                <div class="col-md-6 text-end">
+                    <button class="btn btn-outline-secondary me-2">
+                        <i data-feather="bell" class="me-1"></i>
+                        Alert All
+                    </button>
+                    <button class="btn btn-outline-secondary me-2">
+                        <i data-feather="refresh-cw" class="me-1"></i>
+                        Refresh
+                    </button>
+                    <button class="btn btn-primary" id="addPatientBtn">
+                        <i data-feather="plus" class="me-1"></i>
+                        Add Patient
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrics Cards -->
+        <div class="row mb-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card red">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="metric-title">Active Emergencies</span>
+                        <i data-feather="alert-triangle"></i>
+                    </div>
+                    <div class="metric-value" id="activeEmergencies">12</div>
+                    <div class="metric-subtitle">Currently ongoing incidents</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card orange">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="metric-title">Ambulances En Route</span>
+                        <i data-feather="truck"></i>
+                    </div>
+                    <div class="metric-value" id="ambulancesEnRoute">8</div>
+                    <div class="metric-subtitle">Vehicles currently dispatched</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card blue">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="metric-title">Emergency Beds Available</span>
+                        <i data-feather="home"></i>
+                    </div>
+                    <div class="metric-value" id="emergencyBedsAvailable">3</div>
+                    <div class="metric-subtitle">ICU/Trauma beds ready</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card green">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="metric-title">Response Time Avg</span>
+                        <i data-feather="clock"></i>
+                    </div>
+                    <div class="metric-value" id="responseTimeAvg">4.2m</div>
+                    <div class="metric-subtitle">Average response duration</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
+                <a class="nav-link active" href="#overview">Overview</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#active-cases">Active Cases</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#ambulances">Ambulances</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#contacts">Contacts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#protocols">Protocols</a>
+            </li>
+        </ul>
+
+        <!-- Action Sections -->
+        <div class="row mb-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="action-card">
+                    <div class="d-flex align-items-center mb-3">
+                        <i data-feather="alert-triangle" class="action-icon red"></i>
+                        <h5 class="mb-0">Code Red Alert</h5>
+                    </div>
+                    <p class="text-muted">Activate a hospital-wide emergency protocol for critical situations.</p>
+                    <button class="btn btn-red text-white">Activate Hospital Emergency Protocol</button>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="action-card">
+                    <div class="d-flex align-items-center mb-3">
+                        <i data-feather="truck" class="action-icon orange"></i>
+                        <h5 class="mb-0">Ambulance Dispatch</h5>
+                    </div>
+                    <p class="text-muted">Dispatch an emergency vehicle to a specified location.</p>
+                    <button class="btn btn-orange text-white">Dispatch Emergency Vehicle</button>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="action-card">
+                    <div class="d-flex align-items-center mb-3">
+                        <i data-feather="message-circle" class="action-icon blue"></i>
+                        <h5 class="mb-0">Emergency Communication</h5>
+                    </div>
+                    <p class="text-muted">Open secure communication channels for emergency teams.</p>
+                    <button class="btn btn-blue text-white">Open Communication Channel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Emergency Activity -->
+        <div class="row">
+            <div class="col-12">
+                <h2 class="section-title">Recent Emergency Activity</h2>
+                <p class="section-subtitle">Latest emergency cases and their current status</p>
+                
+                <div id="activityList">
+                    <!-- Activity items will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patient Modal -->
+    <div class="modal fade" id="patientModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Patient</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="patientForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="patientName" class="form-label">Patient Name *</label>
+                                <input type="text" class="form-control" id="patientName" name="patientName" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="patientAge" class="form-label">Age</label>
+                                <input type="number" class="form-control" id="patientAge" name="patientAge" min="0" max="150">
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="emergencyType" class="form-label">Emergency Type *</label>
+                                <select class="form-select" id="emergencyType" name="emergencyType" required>
+                                    <option value="">Select Emergency Type</option>
+                                    <option value="Cardiac Arrest">Cardiac Arrest</option>
+                                    <option value="Traffic Accident">Traffic Accident</option>
+                                    <option value="Respirator Failure">Respirator Failure</option>
+                                    <option value="Stroke">Stroke</option>
+                                    <option value="Severe Injury">Severe Injury</option>
+                                    <option value="Drug Overdose">Drug Overdose</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="priority" class="form-label">Priority Level *</label>
+                                <select class="form-select" id="priority" name="priority" required>
+                                    <option value="">Select Priority</option>
+                                    <option value="critical">Critical</option>
+                                    <option value="urgent">Urgent</option>
+                                    <option value="monitoring">Monitoring</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Location *</label>
+                            <input type="text" class="form-control" id="location" name="location" placeholder="e.g., Emergency Room 1, Highway 101" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="symptoms" class="form-label">Symptoms/Notes</label>
+                            <textarea class="form-control" id="symptoms" name="symptoms" rows="3" placeholder="Describe symptoms or additional information..."></textarea>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="contactNumber" class="form-label">Contact Number</label>
+                                <input type="tel" class="form-control" id="contactNumber" name="contactNumber" placeholder="Phone number">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="bloodType" class="form-label">Blood Type</label>
+                                <select class="form-select" id="bloodType" name="bloodType">
+                                    <option value="">Unknown</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="savePatientBtn">Add Patient</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+const API_URL = "http://localhost:3000/api/emergency";
+
+// Load metrics
+async function loadMetrics() {
+  const res = await axios.get(`${API_URL}/dashboard`);
+  const m = res.data;
+  document.getElementById("activeEmergencies").textContent = m.activeEmergencies;
+  document.getElementById("ambulancesEnRoute").textContent = m.ambulancesEnRoute;
+  document.getElementById("emergencyBedsAvailable").textContent = m.emergencyBedsAvailable;
+  document.getElementById("responseTimeAvg").textContent = m.responseTimeAvg;
+}
+
+// Load activity
+async function loadActivity() {
+  const res = await axios.get(`${API_URL}/activity`);
+  const list = res.data;
+  const container = document.getElementById("activityList");
+  container.innerHTML = "";
+  list.forEach(a => {
+    container.appendChild(createActivityElement(a));
+  });
+  feather.replace();
+}
+
+// Create activity card
+function createActivityElement(activity) {
+  const div = document.createElement("div");
+  div.className = "activity-item";
+
+  let iconType = "heart";
+  let iconClass = "icon-critical";
+  if (activity.type === "Traffic Accident") {
+    iconType = "truck"; iconClass = "icon-urgent";
+  } else if (activity.type === "Respirator Failure") {
+    iconType = "home"; iconClass = "icon-monitoring";
+  }
+
+  div.innerHTML = `
+    <div class="activity-icon ${iconClass}">
+      <i data-feather="${iconType}"></i>
+    </div>
+    <div class="flex-grow-1">
+      <h6 class="mb-1">${activity.type}</h6>
+      <p class="mb-0 text-muted">${activity.patient ? activity.patient + " • " : ""}${activity.location}</p>
+    </div>
+    <div class="text-end">
+      <span class="status-badge ${activity.status}">${activity.status}</span>
+      <div class="activity-time">${activity.time}</div>
+    </div>`;
+  return div;
+}
+
+// Add patient
+async function addPatient() {
+  const form = document.getElementById("patientForm");
+  const formData = Object.fromEntries(new FormData(form));
+  if (!formData.emergencyType || !formData.priority || !formData.location || !formData.patientName) {
+    form.reportValidity();
+    return;
+  }
+
+  await axios.post(`${API_URL}/patient`, formData);
+  await loadMetrics();
+  await loadActivity();
+
+  bootstrap.Modal.getInstance(document.getElementById("patientModal")).hide();
+  form.reset();
+  alert("Patient added successfully!");
+}
+
+// Init
+document.addEventListener("DOMContentLoaded", () => {
+  loadMetrics();
+  loadActivity();
+
+  // Open modal
+  document.getElementById("addPatientBtn").addEventListener("click", () => {
+    new bootstrap.Modal(document.getElementById("patientModal")).show();
+  });
+
+  // Save patient
+  document.getElementById("savePatientBtn").addEventListener("click", addPatient);
+
+  // Refresh button
+  document.querySelector(".btn-outline-secondary.me-2:nth-child(2)")
+    .addEventListener("click", () => {
+      loadMetrics();
+      loadActivity();
+    });
+});
+
+// Poll every 5s
+setInterval(() => { loadMetrics(); loadActivity(); }, 5000);
+</script>
+
+</body>
+</html>
