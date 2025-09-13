@@ -17,10 +17,12 @@ export default defineConfig(({ mode }) => ({
         secure: false,
       },
     },
-    fs: {
-      allow: ["./client", "./shared", "./node_modules"],
-      deny: [".env", ".env.*", "*.{crt,pem}", "**/.git/**", "server/**"],
-    },
+  fs: {
+    allow: ["./client", "./shared", "./node_modules", "./"],
+    deny: [".env", ".env.*", "*.{crt,pem}", "**/.git/**", "server/**"],
+  },
+
+
   },
   build: {
     outDir: "dist", // Netlify expects this
