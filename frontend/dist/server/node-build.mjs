@@ -24,7 +24,7 @@ function createServer() {
 const app = createServer();
 const port = process.env.PORT || 3e3;
 const __dirname = import.meta.dirname;
-const distPath = path.join(__dirname, "../spa");
+const distPath = path.join(__dirname, "../");
 app.use(express.static(distPath));
 app.get("*", (req, res) => {
   if (req.path.startsWith("/api/") || req.path.startsWith("/health")) {
