@@ -162,7 +162,7 @@ export default function BedDashboard() {
     e.preventDefault();
     try {
       if (modalMode === "add") {
-        await axios.post("http://localhost:4000/api/admin/beds", form);
+        await axios.post("https://medicure-57ts.onrender.com/api/admin/beds", form);
       } else if (modalMode === "edit" && currentBed) {
         await axios.put(
           `http://localhost:4000/api/admin/beds/${currentBed._id}`,
@@ -170,7 +170,7 @@ export default function BedDashboard() {
         );
       } else if (modalMode === "delete" && currentBed) {
         await axios.delete(
-          `http://localhost:4000/api/admin/beds/${currentBed._id}`
+          `https://medicure-57ts.onrender.com/api/admin/beds/${currentBed._id}`
         );
       } else if (modalMode === "assign" && currentBed) {
         if (!form.patientName || !form.patientId) {
@@ -178,7 +178,7 @@ export default function BedDashboard() {
           return;
         }
         await axios.put(
-          `http://localhost:4000/api/admin/beds/${currentBed._id}`,
+          `https://medicure-57ts.onrender.com/api/admin/beds/${currentBed._id}`,
           {
             patient: { name: form.patientName, id: form.patientId },
             status: "occupied",
@@ -195,12 +195,12 @@ export default function BedDashboard() {
         // Try discharge endpoint first
         try {
           await axios.put(
-            `http://localhost:4000/api/admin/beds/${currentBed._id}/discharge`
+            `https://medicure-57ts.onrender.com/api/admin/beds/${currentBed._id}/discharge`
           );
         } catch {
           // Fallback if no discharge endpoint
           await axios.put(
-            `http://localhost:4000/api/admin/beds/${currentBed._id}`,
+            `https://medicure-57ts.onrender.com/api/admin/beds/${currentBed._id}`,
             {
               status: "available",
               dischargeDate: new Date().toISOString(),
