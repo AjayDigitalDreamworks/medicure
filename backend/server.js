@@ -26,7 +26,7 @@ app.use(helmet());
 // CORS (Adjust origin for production)
 // const allowedOrigins = [process.env.CLIENT_URL || 'http://localhost:3000'];
 app.use(cors({
-  origin: 'https://medicure-xh4v.onrender.com/',
+  origin: 'https://medicure-xh4v.onrender.com',
   credentials: true,
 }));
 
