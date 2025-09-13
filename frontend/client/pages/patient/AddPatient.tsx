@@ -46,7 +46,7 @@ export default function AddPatient() {
   };
 
   try {
-    const res = await fetch("http://localhost:4000/api/patient/admitpatient", {
+    const res = await fetch("https://medicure-57ts.onrender.com/api/patient/admitpatient", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
