@@ -45,6 +45,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "../frontend/views"));
 app.use(express.static(path.join(__dirname,"../frontend/public")));
 
+app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // file serve karne ke liye
 
 // MongoDB connection
 mongoose
@@ -98,7 +99,7 @@ app.get('/api/user/profile', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
     
-    
+
     // Send back user data (exclude sensitive fields like password)
     res.json({
       id: user._id,

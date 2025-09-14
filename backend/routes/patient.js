@@ -217,23 +217,34 @@ router.get("/dashboard", ensureAuthenticated , checkRoles(['patient']), async (r
 
 // ===== Book Appointment =====
 // Appointment booking API (JSON response)
-router.post("/appointments/book", async (req, res) => {
+router.post("/appointments/book", upload.single("idProof"), async (req, res) => {
   try {
-    const { patientId, doctorId, date, time, reason } = req.body;
+    const { department, doctor, name, address, contact, purpose, date, time } = req.body;
 
-    const newAppointment = new Appointment({
-      patientId,
-      doctorId,
+    if (!department || !doctor || !name || !contact || !date || !time) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const appointment = new Appointment({
+      department,
+      doctor,
+      name,
+      address,
+      contact,
+      purpose,
       date,
       time,
-      reason
+      idProofPath: req.file ? req.file.path : null
     });
 
-    await newAppointment.save();
-    res.status(201).json({ message: "Appointment booked successfully" });
+    await appointment.save();
 
-  } catch (error) {
-    console.error("Booking error:", error);
+    res.status(201).json({
+      message: "Appointment booked successfully",
+      appointment,
+    });
+  } catch (err) {
+    console.error("Booking error:", err);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
