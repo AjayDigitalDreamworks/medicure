@@ -91,6 +91,30 @@
                 </div>
             </div>
 
+
+            <div class="lab-results-section mb-4">
+                <div class="card p-4">
+                    <h3 class="section-title">Upcoming Appointments</h3>
+                    <div class="table-responsive">
+                        <table class="table lab-table">
+                            <thead>
+                                <tr>
+                                    <th>Doctor Name</th>
+                                    <th>Time</th>
+                                    <th>date</th>
+                                    <!-- <th>Reference Range</th> -->
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
             <!-- Lab Results -->
             <div class="lab-results-section mb-4">
                 <div class="card p-4">
@@ -135,9 +159,9 @@
                 </div>
             </div>
 
-            <div class="dashboard-grid">
+            <!-- <div class="dashboard-grid">
                 
-                <!-- Upcoming Appointment -->
+               
                 <div class="card p-3">
                     <h3 class="card-title">Upcoming Appointment</h3>
                     <div class="appointment-status"></div>
@@ -152,25 +176,25 @@
                     </div>
                 </div>
 
-                <!-- Admissions -->
+               
                 <div class="card p-3">
                     <h3 class="card-title">My Admissions</h3>
                     <ul class="list-group admissions-list"></ul>
                 </div>
 
-                <!-- Notifications -->
+                
                 <div class="card p-3">
                     <h3 class="card-title">Notifications</h3>
                     <ul class="list-group notifications-list"></ul>
                 </div>
 
-                <!-- Queue Position -->
+                
                 <div class="card p-3">
                     <h3 class="card-title">Queue Position</h3>
                     <p>Your current position in queue: <strong class="queue-position"></strong></p>
                 </div>
 
-                 <!-- Bed Assignment -->
+                
                 <div class="card bed-card p-3">
                     <h3 class="card-title">Bed Assignment</h3>
                     <div class="bed-info">
@@ -194,7 +218,7 @@
                     <button class="btn btn-secondary">View Ward Map</button>
                 </div>
 
-                 <!-- Quick Actions -->
+                 
                 <div class="card actions-card p-3">
                     <h3 class="card-title">Quick Actions</h3>
                     <div class="action-buttons">
@@ -204,7 +228,7 @@
                     </div>
                 </div>
 
-            </div>
+            </div> -->
         </div>
     </main>
 </div>
@@ -301,6 +325,39 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("Error fetching patient data:", err);
     }
 });
+
+
+
+async function loadUpcomingAppointments() {
+  try {
+    const res = await fetch("/appointments/upcoming");
+    const data = await res.json();
+    const tbody = document.querySelector(".lab-results-section tbody");
+    tbody.innerHTML = "";
+
+    if (!data.appointments || data.appointments.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="4">No upcoming appointments</td></tr>`;
+      return;
+    }
+
+    data.appointments.forEach(appt => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${appt.doctor?.name || "Unknown"}</td>
+        <td>${appt.time}</td>
+        <td>${new Date(appt.date).toLocaleDateString()}</td>
+        <td><span class="status-badge ${appt.status.toLowerCase()}">${appt.status}</span></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  } catch (err) {
+    console.error("Error loading upcoming appointments:", err);
+  }
+}
+
+// Page load par call karo
+document.addEventListener("DOMContentLoaded", loadUpcomingAppointments);
+
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

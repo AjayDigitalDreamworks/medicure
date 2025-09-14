@@ -13,6 +13,7 @@ const { ensureAuthenticated , checkRoles } = require("./config/auth");
 dotenv.config();
 const app = express();
 const Patient = require('./models/Patient');
+const Appointment = require('./models/Appointment');
 
 // Middlewares
 app.use(express.json());
@@ -123,7 +124,22 @@ app.get('/api/user/profile', async (req, res) => {
 const doctorAPIRoutes = require('./routes/patientroute'); // adjust path if needed
 app.use(doctorAPIRoutes);
 
+app.get("/appointments/upcoming", async (req, res) => {
+  try {
+    const today = new Date();
 
+    const appointments = await Appointment.find({ date: { $gte: today } })
+      .sort({ date: 1, time: 1 })   // ascending by date + time
+      .limit(5)
+      .populate("doctor", "name")   // doctor ka sirf name show karna
+      .select("doctor date time status"); // sirf yeh fields bhejna
+
+    res.json({ appointments });
+  } catch (err) {
+    console.error("Upcoming appointments error:", err);
+    res.status(500).json({ error: "Failed to fetch upcoming appointments" });
+  }
+});
 
 
 const methodOverride = require('method-override');
