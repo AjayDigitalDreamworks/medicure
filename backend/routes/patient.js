@@ -217,37 +217,27 @@ router.get("/dashboard", ensureAuthenticated , checkRoles(['patient']), async (r
 
 // ===== Book Appointment =====
 // Appointment booking API (JSON response)
-router.post("/appointments/book", ensureAuthenticated, async (req, res) => {
+router.post("/appointments/book", async (req, res) => {
   try {
-    const { doctor, department, date, time, name, address, contact, purpose } = req.body;
-
-    if (!doctor || !department || !date || !time || !name || !contact) {
-      return res.status(400).json({ success: false, error: "Please fill in all required fields." });
-    }
+    const { patientId, doctorId, date, time, reason } = req.body;
 
     const newAppointment = new Appointment({
-      patient: req.user._id,
-      user: req.user._id,
-      doctor,
-      department,
+      patientId,
+      doctorId,
       date,
       time,
-      name,
-      address,
-      contact,
-      purpose
+      reason
     });
 
     await newAppointment.save();
+    res.status(201).json({ message: "Appointment booked successfully" });
 
-    // ✅ return JSON
-    res.json({ success: true, appointment: newAppointment });
-
-  } catch (err) {
-    console.error("Booking error:", err);
-    res.status(500).json({ success: false, error: "Error booking appointment. Please try again." });
+  } catch (error) {
+    console.error("Booking error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 
 
 module.exports = router;
