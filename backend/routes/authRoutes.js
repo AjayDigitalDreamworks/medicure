@@ -135,13 +135,12 @@ router.get("/verify-email", async (req, res) => {
 
 // LOGIN Route
 router.post("/login", (req, res, next) => {
-  passport.authenticate("local", async (err, user, info) => {
+  return passport.authenticate("local", async (err, user, info) => {
     if (err) return next(err);
     if (!user) {
       return res.render("login", { msg: "Error: Invalid email or password" });
     }
 
-    // Check if email is verified
     if (!user.isVerified) {
       return res.render("login", {
         msg: "Error: Please verify your email before logging in.",
@@ -150,12 +149,12 @@ router.post("/login", (req, res, next) => {
 
     req.login(user, (err) => {
       if (err) return next(err);
-      console.log(err);
-      console.log(req.user);
+      console.log("User logged in:", req.user);
       return res.redirect("/");
     });
-  })(req, res, next);
+  })(req, res, next); // ✅ important to return this!
 });
+
 
 // Logout route
 router.get("/logout", (req, res) => {
