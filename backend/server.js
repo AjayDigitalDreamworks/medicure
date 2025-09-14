@@ -20,17 +20,20 @@ app.use(cors());
 require("./config/passport")(passport);
 
 // const session = require("express-session");
+app.set('trust proxy', 1); // ✅ Required for secure cookies to work behind proxy
 
 app.use(session({
-  secret: process.env.SESSION_SECRET || "fallbackSecretKey123", // ✅ secret required
+  secret: process.env.SESSION_SECRET || "fallbackSecretKey123",
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === "production", // true only on HTTPS
+    secure: process.env.NODE_ENV === "production", // ✅ ensures HTTPS in prod
     httpOnly: true,
+    sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax', // ✅ cross-domain safe
     maxAge: 1000 * 60 * 60 // 1 hour
   }
 }));
+
 
 
 // Initialize Passport.js
