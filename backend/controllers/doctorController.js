@@ -4,18 +4,19 @@ const Report = require('../models/Report');
 const User = require('../models/User');
 const sendEmail = require('../util/sendEmail');
 
+// GET /doctor/dashboard
 
 exports.getDoctorStats = async (req, res) => {
   try {
-    const doctorId = '68c54a9ba995c11eb8a6efa3';
-    console.log(doctorId);
+    // const doctorId = '68c54a9ba995c11eb8a6efa3';
+    const doctorId = req.user._id;
+
 
     const today = new Date();
     const startOfDay = new Date(today.setHours(0, 0, 0, 0));
     const endOfDay = new Date(today.setHours(23, 59, 59, 999));
 
     const totalAppointments = await Appointment.countDocuments({ doctor: doctorId });
-
     const todaysAppointments = await Appointment.countDocuments({
       doctor: doctorId,
       createdAt: { $gte: startOfDay, $lte: endOfDay },
@@ -30,7 +31,6 @@ exports.getDoctorStats = async (req, res) => {
 
     const appointments = await Appointment.find({ doctor: doctorId });
     let avgTime = 0;
-
     if (appointments.length > 0) {
       const totalTime = appointments.reduce((sum, appt) => {
         const diff = (new Date(appt.updatedAt) - new Date(appt.createdAt)) / 60000;
@@ -39,7 +39,7 @@ exports.getDoctorStats = async (req, res) => {
       avgTime = (totalTime / appointments.length).toFixed(2);
     }
 
-    res.render('doctor/doctor',{
+    res.json({
       message: 'Doctor dashboard stats fetched',
       stats: {
         totalAppointments,
@@ -54,9 +54,12 @@ exports.getDoctorStats = async (req, res) => {
   }
 };
 
+
+
 exports.getCurrentPatientAndHistory = async (req, res) => {
   try {
-    const doctorId = req.user._id;
+    // const doctorId = '68c54a9ba995c11eb8a6efa3'; // TEMP hardcoded
+     const doctorId = req.user._id;
 
     const currentQueue = await Queue.findOne({
       doctor: doctorId,
@@ -88,88 +91,78 @@ exports.getCurrentPatientAndHistory = async (req, res) => {
     });
 
   } catch (err) {
+    console.error("🔴 Error in getCurrentPatientAndHistory:", err);
     res.status(500).json({ message: 'Failed to load dashboard', error: err.message });
   }
 };
 
+
 exports.moveToNextPatient = async (req, res) => {
   try {
+    // const doctorId = '68c54a9ba995c11eb8a6efa3'; // Use actual doctor ID from DB
     const doctorId = req.user._id;
 
-    // 1. Complete the current patient
-    const current = await Queue.findOne({
-      doctor: doctorId,
-      status: 'in-progress',
-    });
 
+
+    // Complete current patient
+    const current = await Queue.findOne({ doctor: doctorId, status: 'in-progress' });
     if (current) {
       current.status = 'completed';
       current.completedAt = new Date();
       await current.save();
     }
 
-    // 2. Get next patient in line
-    const next = await Queue.findOne({
-      doctor: doctorId,
-      status: 'waiting',
-    }).sort({ createdAt: 1 }).populate('patient');
-
+    // Get next patient
+    const next = await Queue.findOne({ doctor: doctorId, status: 'waiting' }).sort({ createdAt: 1 }).populate('patient');
     if (!next) {
-      return res.status(200).json({ message: 'Queue is empty. No next patient.', nextPatient: null });
+      return res.status(200).json({ message: 'No next patient in queue.', nextPatient: null });
     }
 
-    // 3. Mark next patient as in-progress
     next.status = 'in-progress';
     next.startedAt = new Date();
     await next.save();
 
-    // 4. Notify next patient
-    const msg = `Dear ${next.patient.name}, your appointment has started. Please proceed to the doctor.`;
-
+    // Notify next patient
     if (next.patient.email) {
-      await sendEmail(next.patient.email, 'Your Appointment Has Started', `<p>${msg}</p>`);
-    }
-    if (next.patient.phoneNumber) {
-      await sendSMS(next.patient.phoneNumber, msg);
+      await sendEmail(next.patient.email, 'Your Appointment Has Started', `<p>Dear ${next.patient.name}, your appointment has started. Please proceed to the doctor.</p>`);
     }
 
-    // 5. Return next patient info
     res.status(200).json({
       message: 'Moved to next patient',
       nextPatient: {
         name: next.patient.name,
-        age: next.patient.age,
-        gender: next.patient.gender,
-        phone: next.patient.phoneNumber,
         appointmentId: next.appointment,
         queueId: next._id,
       }
     });
-
   } catch (err) {
     res.status(500).json({ message: 'Failed to move to next patient', error: err.message });
   }
 };
 
+
 // 1️⃣ View today's appointments
+// doctorController.js mein ek rough example for getTodaysAppointments
 exports.getTodaysAppointments = async (req, res) => {
   try {
     const doctorId = req.user._id;
-    const today = new Date();
-    const start = new Date(today.setHours(0, 0, 0, 0));
-    const end = new Date(today.setHours(23, 59, 59, 999));
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
 
     const appointments = await Appointment.find({
       doctor: doctorId,
-      date: { $gte: start, $lte: end },
-      status: { $in: ['approved', 'in-progress'] }
-    }).populate('patient', 'name gender age phoneNumber');
+      date: { $gte: start, $lte: end }
+    }).populate('patient', 'name age');
 
-    res.status(200).json({ appointments });
+    res.json({ appointments });
   } catch (err) {
-    res.status(500).json({ message: 'Failed to fetch appointments', error: err.message });
+    res.status(500).json({ message: 'Error fetching appointments', error: err.message });
   }
 };
+
+
 
 // 2️⃣ Write prescription
 exports.addPrescription = async (req, res) => {
@@ -197,7 +190,10 @@ exports.addPrescription = async (req, res) => {
 // 3️⃣ View patient history
 exports.getPatientHistory = async (req, res) => {
   try {
+    // const doctorId = '68c54a9ba995c11eb8a6efa3'; // Use actual doctor ID from DB
     const doctorId = req.user._id;
+
+
     const patientId = req.params.patientId;
 
     const history = await Appointment.find({

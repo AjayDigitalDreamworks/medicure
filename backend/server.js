@@ -72,7 +72,7 @@ app.use('/patient', patientRouter);
 const authRoutes = require("./routes/authRoutes");
 app.use("/api/auth", authRoutes);
 const doctor = require("./routes/doctor");
-app.use("/doctor", doctor);
+app.use("/api/doctor", doctor);
 const emergencyRoutes = require("./routes/emergency");
 app.use("/api/emergency", emergencyRoutes);
 

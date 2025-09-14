@@ -168,11 +168,9 @@
                                 
                                 <div class="doctor-select">
                                     <select class="form-control" id="doctorSelect">
-                                        <option value="">Select a doctor</option>
-                                        <option value="dr-smith">Dr. Sarah Smith</option>
-                                        <option value="dr-johnson">Dr. Michael Johnson</option>
-                                        <option value="dr-williams">Dr. Emily Williams</option>
-                                    </select>
+    <option value="">Select a doctor</option>
+</select>
+
                                 </div>
 
                                 <div class="time-slots-section">
@@ -449,6 +447,42 @@ class AppointmentBooking {
 document.addEventListener('DOMContentLoaded', () => {
     new AppointmentBooking();
 });
+
+
+
+document.getElementById('departmentSelect').addEventListener('change', async (e) => {
+    const department = e.target.value;
+    const doctorSelect = document.getElementById('doctorSelect');
+
+    // Clear previous options
+    doctorSelect.innerHTML = `<option value="">Loading...</option>`;
+
+    if (!department) {
+        doctorSelect.innerHTML = `<option value="">Select a department first</option>`;
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/doctor/by-department/${department}`);
+        const data = await response.json();
+
+        if (data.doctors && data.doctors.length > 0) {
+            doctorSelect.innerHTML = `<option value="">Select a doctor</option>`;
+            data.doctors.forEach(doctor => {
+                const option = document.createElement('option');
+                option.value = doctor._id;
+                option.textContent = `${doctor.name} (${doctor.specialization || 'General'})`;
+                doctorSelect.appendChild(option);
+            });
+        } else {
+            doctorSelect.innerHTML = `<option value="">No doctors found</option>`;
+        }
+    } catch (err) {
+        console.error('Error fetching doctors:', err);
+        doctorSelect.innerHTML = `<option value="">Error loading doctors</option>`;
+    }
+});
+
 </script>
 </body>
 </html>

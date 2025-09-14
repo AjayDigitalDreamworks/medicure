@@ -8,15 +8,16 @@ const Doctor = require("../models/Doctors");
 const sendEmail = require('../util/sendEmail');
 const Notification = require("../models/Notification");
 const moment = require("moment");
-const Patient = require("../models/Patient");
-const {Queue} = require("../models/Opd");
+// const Patient = require("../models/Patient");
+const User = require("../models/User");
+const Queue = require("../models/Opd");
 const Emergency = require("../models/Emergency");
 
 // const bedOccupancyData = [];
 
-router.get("/dashboard", ensureAuthenticated, checkRoles(['admin', 'doctor']), async (req, res) => {
+router.get("/dashboard", ensureAuthenticated, checkRoles(['admin']), async (req, res) => {
   try {
-    if (req.user.role !== "admin" && req.user.role !== "doctor") {
+    if (req.user.role !== "admin") {
       return res.redirect("/api/auth/login");
     }
 
@@ -100,75 +101,100 @@ router.get("/dashboard", ensureAuthenticated, checkRoles(['admin', 'doctor']), a
 
 
 // =========== appointment ==========
-router.get("/appointments", ensureAuthenticated, checkRoles(['admin', 'doctor']), async (req, res) => {
-  try {
-    const { search, status, department, date, page = 1 } = req.query; // Extract filters and page
-    const pageSize = 10; // Set the number of appointments per page
+function getDateRange(dateFilter) {
+  switch (dateFilter) {
+    case "today":
+      return {
+        startDate: moment().startOf("day").toDate(),
+        endDate: moment().endOf("day").toDate()
+      };
+    case "tomorrow":
+      return {
+        startDate: moment().add(1, "days").startOf("day").toDate(),
+        endDate: moment().add(1, "days").endOf("day").toDate()
+      };
+    case "week":
+      return {
+        startDate: moment().startOf("week").toDate(),
+        endDate: moment().endOf("week").toDate()
+      };
+    case "month":
+      return {
+        startDate: moment().startOf("month").toDate(),
+        endDate: moment().endOf("month").toDate()
+      };
+    default:
+      return {};
+  }
+}
 
+router.get("/appointments", ensureAuthenticated, checkRoles(["admin", "doctor"]), async (req, res) => {
+  try {
+    const { search, status, department, date, page = 1 } = req.query;
+    const pageSize = 10;
     let filter = {};
 
-    // Apply filters
+    // Search by patient name
     if (search) {
-      filter['patient.name'] = { $regex: search, $options: 'i' }; // Case-insensitive search
-    }
-    if (status) {
-      filter.status = status;
-    }
-    if (department) {
-      filter.department = department;
-    }
-    if (date) {
-      const now = new Date();
-      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      let startDate, endDate;
+      const matchedPatients = await User.find({
+        name: { $regex: search, $options: "i" }
+      }).select("_id");
 
-      switch (date) {
-        case "today":
-          startDate = today;
-          endDate = new Date(today.setHours(23, 59, 59, 999));
-          break;
-        case "tomorrow":
-          const tomorrow = new Date(today);
-          tomorrow.setDate(tomorrow.getDate() + 1);
-          startDate = tomorrow;
-          endDate = new Date(tomorrow.setHours(23, 59, 59, 999));
-          break;
-        case "week":
-          const weekStart = moment().startOf("week").toDate();
-          const weekEnd = moment().endOf("week").toDate();
-          startDate = weekStart;
-          endDate = weekEnd;
-          break;
-        case "month":
-          const monthStart = moment().startOf("month").toDate();
-          const monthEnd = moment().endOf("month").toDate();
-          startDate = monthStart;
-          endDate = monthEnd;
-          break;
+      const patientIds = matchedPatients.map(p => p._id);
+      if (patientIds.length === 0) {
+        return res.render("appointment", {
+          title: "Appointments Management",
+          appointments: [],
+          user: req.user,
+          confirmAppointments: 0,
+          pendingAppointments: 0,
+          completedAppointments: 0,
+          cancelAppointments: 0,
+          totalPages: 0,
+          currentPage: 1,
+          todaysAppointments: 0,
+          weekAppointments: 0,
+          monthAppointments: 0,
+          searchTerm: search,
+          selectedStatus: status || "",
+          selectedDepartment: department || "",
+          selectedDate: date || ""
+        });
       }
+      filter.patient = { $in: patientIds };
+    }
 
+    // Filter by status
+    if (status) filter.status = status;
+
+    // Filter by department
+    if (department) filter.department = department;
+
+    // Filter by date
+    if (date) {
+      const { startDate, endDate } = getDateRange(date);
       if (startDate && endDate) {
         filter.date = { $gte: startDate, $lte: endDate };
       }
     }
 
-    // Get total appointments count with filters applied
+    // Get total appointments and calculate pagination
     const totalAppointments = await Appointment.countDocuments(filter);
     const totalPages = Math.ceil(totalAppointments / pageSize);
 
-    // Get appointments for current page
+    // Fetch appointments
     const appointments = await Appointment.find(filter)
       .skip((page - 1) * pageSize)
       .limit(pageSize)
-      .populate("patient");
+      .populate("patient", "name age gender");
 
-    // Stats calculations
-    const confirmAppointments = appointments.filter((a) => a.status.toLowerCase() === "confirmed").length;
-    const pendingAppointments = appointments.filter((a) => a.status.toLowerCase() === "pending").length;
-    const completedAppointments = appointments.filter((a) => a.status.toLowerCase() === "completed").length;
-    const cancelAppointments = appointments.filter((a) => a.status.toLowerCase() === "cancelled").length;
+    // Status counts from current page
+    const confirmAppointments = appointments.filter(a => a.status.toLowerCase() === "confirmed").length;
+    const pendingAppointments = appointments.filter(a => a.status.toLowerCase() === "pending").length;
+    const completedAppointments = appointments.filter(a => a.status.toLowerCase() === "completed").length;
+    const cancelAppointments = appointments.filter(a => a.status.toLowerCase() === "cancelled").length;
 
-    // Quick stats for today, week, month
+    // Quick stats (overall)
     const todaysAppointments = await Appointment.countDocuments({
       date: { $gte: moment().startOf("day").toDate(), $lte: moment().endOf("day").toDate() }
     });
@@ -181,6 +207,7 @@ router.get("/appointments", ensureAuthenticated, checkRoles(['admin', 'doctor'])
       date: { $gte: moment().startOf("month").toDate(), $lte: moment().endOf("month").toDate() }
     });
 
+    // Render page
     res.render("appointment", {
       title: "Appointments Management",
       appointments,
@@ -194,14 +221,14 @@ router.get("/appointments", ensureAuthenticated, checkRoles(['admin', 'doctor'])
       todaysAppointments,
       weekAppointments,
       monthAppointments,
-      searchTerm: search || '',
-      selectedStatus: status || '',
-      selectedDepartment: department || '',
-      selectedDate: date || ''
+      searchTerm: search || "",
+      selectedStatus: status || "",
+      selectedDepartment: department || "",
+      selectedDate: date || ""
     });
 
   } catch (err) {
-    console.error(err);
+    console.error("Appointments route error:", err);
     res.status(500).render("error", { msg: "Error fetching appointments." });
   }
 });
@@ -247,21 +274,63 @@ router.post('/appointment/:id/delay', async (req, res) => {
 
 
 // ====== Confirm Appointment ======
-router.post(
-  "/appointments/:id/confirm",
-  ensureAuthenticated,
-  async (req, res) => {
-    try {
-      await Appointment.findByIdAndUpdate(req.params.id, {
-        status: "confirmed",
-      });
-      res.redirect("/admin/appointments");
-    } catch (err) {
-      console.error(err);
-      res.status(500).render("error", { msg: "Error confirming appointment." });
+// const Queue = require('../models/Opd'); // Assuming Queue model for doctor queue
+
+router.post("/appointments/:id/confirm", ensureAuthenticated, async (req, res) => {
+  try {
+    const appointment = await Appointment.findById(req.params.id).populate('user');
+    if (!appointment) {
+      return res.status(404).render("error", { msg: "Appointment not found." });
     }
+
+    // Update appointment status
+    appointment.status = "confirmed";
+    await appointment.save();
+
+    // Count existing queue (waiting or in-progress)
+    const currentQueueCount = await Queue.countDocuments({
+      status: { $in: ['waiting', 'in-progress'] }
+    });
+
+    const avgWaitTimePerPatient = 10; // in minutes
+    const position = currentQueueCount + 1;
+    const waitTime = `${position * avgWaitTimePerPatient} min`;
+
+    // Create Queue Entry
+    const queueEntry = new Queue({
+      id: new mongoose.Types.ObjectId().toHexString(), // required string ID
+      name: appointment.patient.name,
+      phone: "", // Add phone if available from appointment or user
+      department: appointment.department,
+      appointmentTime: appointment.time,
+      status: "waiting",
+      priority: "normal", // Set dynamically if needed
+      waitTime,
+      position
+    });
+
+    await queueEntry.save();
+
+    // Send confirmation email
+    const patientEmail = appointment.user?.email || ""; // fallback to blank if undefined
+    const html = `
+      <p>Dear ${appointment.patient.name},</p>
+      <p>Your appointment with Dr. ${appointment.doctor} on ${appointment.date} at ${appointment.time} has been confirmed.</p>
+      <p>Please be on time.</p>
+    `;
+
+    if (patientEmail) {
+      await sendEmail(patientEmail, "Appointment Confirmed", html);
+    }
+
+    res.redirect("/admin/appointments");
+
+  } catch (err) {
+    console.error("❌ Error confirming appointment:", err);
+    res.status(500).render("error", { msg: "Error confirming appointment." });
   }
-);
+});
+
 
 // ====== Reject Appointment ======
 router.post(

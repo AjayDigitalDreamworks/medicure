@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const queueSchema = new mongoose.Schema({
-  id: { type: String, required: true, unique: true }, // Add this line
+  id: { type: String, required: true, unique: true },
   name: { type: String, required: true },
   phone: { type: String, required: true },
   department: { type: String, required: true },
@@ -17,7 +17,7 @@ const departmentSchema = new mongoose.Schema({
   waiting: { type: Number, required: true },
   avgWait: { type: String, required: true }
 });
-const Queue = mongoose.model('Queue', queueSchema);
+module.exports = mongoose.model('Queue', queueSchema);
 const Department = mongoose.model('Department', departmentSchema);
 
-module.exports = { Queue, Department };
+module.exports = Department ;

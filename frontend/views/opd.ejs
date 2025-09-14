@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet" />
     <link href="/css/opd.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
 <div class="dashboard-layout">
@@ -23,9 +24,9 @@
                 <i class="bi bi-clipboard-data"></i>
                 <span>OPD Management</span>
             </a>
-            <a href="javascript:[0]" class="nav-item">
+            <a href="/admin/appointments" class="nav-item">
                 <i class="bi bi-person-check"></i>
-                <span>Doctor Available</span>
+                <span>Appointments</span>
             </a>
             <a href="/admin/bed" class="nav-item">
                 <i class="bi bi-hospital"></i>
@@ -52,11 +53,11 @@
             
             <div class="header-right">
                 <div class="doctor-profile">
-                    <img src="https://randomuser.me/portraits/men/75.jpg" alt="Pranav Dharma" class="doctor-avatar">
+                    <img src="https://randomuser.me/portraits/men/75.jpg" alt="" class="doctor-avatar">
                     <div class="doctor-info">
-                        <h3>Pranav Dharma</h3>
-                        <p>Chief Medical Officer</p>
-                        <span class="email">pranav.dharma@medicure.com</span>
+                        <h3 id="user-name">Loading...</h3>
+                        <p id="user-role">Role</p>
+                        <span class="email" id="user-email">Email</span>
                         <div class="status-indicator">
                             <span class="status-dot online"></span>
                             <span>Online</span>
@@ -76,7 +77,7 @@
                     <i class="bi bi-people"></i>
                 </div>
                 <div class="stat-content">
-                    <h2>25</h2>
+                    <h2 id="queue-count">-</h2>
                     <p class="stat-title">Patients in Queue</p>
                     <span class="stat-subtitle">Currently waiting</span>
                 </div>
@@ -87,7 +88,7 @@
                     <i class="bi bi-person-check"></i>
                 </div>
                 <div class="stat-content">
-                    <h2>12</h2>
+                    <h2 id="available-doctors-count">-</h2>
                     <p class="stat-title">Available Doctors</p>
                     <span class="stat-subtitle">Ready for consultation</span>
                 </div>
@@ -98,7 +99,7 @@
                     <i class="bi bi-clock"></i>
                 </div>
                 <div class="stat-content">
-                    <h2>18 min</h2>
+                    <h2 id="avg-wait-time">-</h2>
                     <p class="stat-title">Average Wait Time</p>
                     <span class="stat-subtitle">For new patients</span>
                 </div>
@@ -109,7 +110,7 @@
                     <i class="bi bi-calendar-event"></i>
                 </div>
                 <div class="stat-content">
-                    <h2>47</h2>
+                    <h2 id="upcoming-appointments">-</h2>
                     <p class="stat-title">Upcoming Appointments</p>
                     <span class="stat-subtitle">Scheduled today</span>
                 </div>
@@ -124,7 +125,7 @@
             </div>
             
             <div class="table-container">
-                <table class="data-table">
+                <table class="data-table" id="appointment-requests-table">
                     <thead>
                         <tr>
                             <th>Patient Name</th>
@@ -135,65 +136,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Olivia Davis</td>
-                            <td>Today, 09:00 AM</td>
-                            <td>Dr. Alex Sharma</td>
-                            <td><span class="status-badge pending">Pending</span></td>
-                            <td>
-                                <button class="btn-reject">×</button>
-                                <button class="btn-approve">Approve</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>James Wilson</td>
-                            <td>Tomorrow, 10:30 AM</td>
-                            <td>Dr. Sarah Lee</td>
-                            <td><span class="status-badge pending">Pending</span></td>
-                            <td>
-                                <button class="btn-reject">×</button>
-                                <button class="btn-approve">Approve</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Sophia Martinez</td>
-                            <td>Today, 11:00 AM</td>
-                            <td>Dr. John Davis</td>
-                            <td><span class="status-badge approved">Approved</span></td>
-                            <td>
-                                <button class="btn-action secondary">Chat</button>
-                                <button class="btn-action">Manage</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Liam Anderson</td>
-                            <td>Tomorrow, 02:00 PM</td>
-                            <td>Dr. Emily White</td>
-                            <td><span class="status-badge pending">Pending</span></td>
-                            <td>
-                                <button class="btn-reject">×</button>
-                                <button class="btn-approve">Approve</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Isabella Garcia</td>
-                            <td>Today, 03:00 PM</td>
-                            <td>Dr. Alex Sharma</td>
-                            <td><span class="status-badge rejected">Rejected</span></td>
-                            <td>
-                                <button class="btn-action">Manage</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Noah Rodriguez</td>
-                            <td>Tomorrow, 09:30 AM</td>
-                            <td>Dr. Sarah Lee</td>
-                            <td><span class="status-badge pending">Pending</span></td>
-                            <td>
-                                <button class="btn-reject">×</button>
-                                <button class="btn-approve">Approve</button>
-                            </td>
-                        </tr>
+                        <tr><td colspan="5">Loading...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -204,13 +147,13 @@
             <div class="section-header">
                 <h3>OPD Queue Details</h3>
                 <div class="section-actions">
-                    <button class="btn-add-queue">+ Add To Queue</button>
+                    <button id="btn-add-queue" class="btn btn-primary">+ Add To Queue</button>
                     <a href="#" class="view-all-link">View All</a>
                 </div>
             </div>
             
             <div class="table-container">
-                <table class="data-table">
+                <table class="data-table" id="opd-queue-table">
                     <thead>
                         <tr>
                             <th>Token</th>
@@ -221,113 +164,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>OPD-001</td>
-                            <td>Alice Johnson</td>
-                            <td>15 min</td>
-                            <td>Dr. Emily White</td>
-                            <td><span class="status-badge waiting">Waiting</span></td>
-                        </tr>
-                        <tr>
-                            <td>OPD-002</td>
-                            <td>Bob Williams</td>
-                            <td>25 min</td>
-                            <td>Dr. John Davis</td>
-                            <td><span class="status-badge consultation">In Consultation</span></td>
-                        </tr>
-                        <tr>
-                            <td>OPD-003</td>
-                            <td>Charlie Brown</td>
-                            <td>0 min</td>
-                            <td>Dr. Sarah Lee</td>
-                            <td><span class="status-badge completed">Completed</span></td>
-                        </tr>
-                        <tr>
-                            <td>OPD-004</td>
-                            <td>Diana Miller</td>
-                            <td>5 min</td>
-                            <td>Dr. Emily White</td>
-                            <td><span class="status-badge waiting">Waiting</span></td>
-                        </tr>
-                        <tr>
-                            <td>OPD-005</td>
-                            <td>Ethan Clark</td>
-                            <td>10 min</td>
-                            <td>Dr. John Davis</td>
-                            <td><span class="status-badge waiting">Waiting</span></td>
-                        </tr>
-                        <tr>
-                            <td>OPD-006</td>
-                            <td>Fiona Green</td>
-                            <td>0 min</td>
-                            <td>Dr. Sarah Lee</td>
-                            <td><span class="status-badge cancelled">Cancelled</span></td>
-                        </tr>
-                        <tr>
-                            <td>OPD-007</td>
-                            <td>George King</td>
-                            <td>30 min</td>
-                            <td>Dr. Emily White</td>
-                            <td><span class="status-badge consultation">In Consultation</span></td>
-                        </tr>
+                        <tr><td colspan="5">Loading queue...</td></tr>
                     </tbody>
                 </table>
-            </div>
-        </div>
-
-        <!-- Bottom Section -->
-        <div class="bottom-section">
-            <!-- Quick Actions -->
-            <div class="quick-actions">
-                <h3>Quick Actions</h3>
-                <div class="actions-list">
-                    <div class="action-item">
-                        <i class="bi bi-calendar-plus"></i>
-                        <span>Schedule New Appointment</span>
-                    </div>
-                    <div class="action-item">
-                        <i class="bi bi-person-plus"></i>
-                        <span>Admit Patient</span>
-                    </div>
-                    <div class="action-item">
-                        <i class="bi bi-prescription2"></i>
-                        <span>Diagnose Medication</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Upcoming Schedule -->
-            <div class="upcoming-schedule">
-                <h3>Upcoming Schedule</h3>
-                <div class="schedule-list">
-                    <div class="schedule-item">
-                        <div class="schedule-icon">
-                            <i class="bi bi-people"></i>
-                        </div>
-                        <div class="schedule-info">
-                            <h4>Staff Meeting - Conference Room 3</h4>
-                            <p>02:00 PM</p>
-                        </div>
-                    </div>
-                    <div class="schedule-item">
-                        <div class="schedule-icon">
-                            <i class="bi bi-person-check"></i>
-                        </div>
-                        <div class="schedule-info">
-                            <h4>Dr. Smith - Patient Rounds</h4>
-                            <p>04:30 PM</p>
-                        </div>
-                    </div>
-                    <div class="schedule-item">
-                        <div class="schedule-icon">
-                            <i class="bi bi-box-seam"></i>
-                        </div>
-                        <div class="schedule-info">
-                            <h4>Inventory Check - Pharmacy</h4>
-                            <p>04:30 PM</p>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -346,48 +185,133 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// Interactive functionality
-document.querySelectorAll('.btn-approve').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const row = this.closest('tr');
-        const statusBadge = row.querySelector('.status-badge');
-        statusBadge.textContent = 'Approved';
-        statusBadge.className = 'status-badge approved';
-        
-        const actionCell = row.querySelector('td:last-child');
-        actionCell.innerHTML = `
-            <button class="btn-action secondary">Chat</button>
-            <button class="btn-action">Manage</button>
-        `;
-    });
+const baseURL = window.location.origin;
+
+// Utility: format time nicely
+function formatTime(dateString) {
+    const d = new Date(dateString);
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+async function fetchUserProfile() {
+    try {
+        const res = await axios.get(`${baseURL}/api/user/profile`); // make sure this route gives user data
+        const user = res.data.user;
+        document.getElementById('user-name').textContent = user.name;
+        document.getElementById('user-role').textContent = user.role;
+        document.getElementById('user-email').textContent = user.email;
+    } catch (err) {
+        console.error('Error fetching profile:', err);
+    }
+}
+
+async function fetchStats() {
+    try {
+        const res = await axios.get(`${baseURL}/api/admin/opd/stats`); 
+        // Example: backend route that returns queue count, average wait time, etc.
+        const stats = res.data.stats;
+        document.getElementById('queue-count').textContent = stats.currentQueue || 0;
+        document.getElementById('available-doctors-count').textContent = stats.availableDoctors || 0;
+        document.getElementById('avg-wait-time').textContent = stats.averageWaitTime || "-";
+        document.getElementById('upcoming-appointments').textContent = stats.upcomingAppointmentsToday || 0;
+    } catch (err) {
+        console.error('Error fetching stats:', err);
+    }
+}
+
+async function fetchAppointmentRequests() {
+    try {
+        const res = await axios.get(`${baseURL}/api/admin/appointments/requests?status=pending`);
+        const tableBody = document.querySelector('#appointment-requests-table tbody');
+        tableBody.innerHTML = '';
+        const appointments = res.data.appointments;
+        if (!appointments || appointments.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="5">No appointment requests</td></tr>';
+            return;
+        }
+        appointments.forEach(appt => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${appt.patient.name}</td>
+                <td>${formatTime(appt.date)}</td>
+                <td>${appt.doctor.name}</td>
+                <td><span class="status-badge ${appt.status.toLowerCase()}">${appt.status}</span></td>
+                <td>
+                  <button class="btn btn-sm btn-danger btn-reject" data-id="${appt._id}">Reject</button>
+                  <button class="btn btn-sm btn-success btn-approve" data-id="${appt._id}">Approve</button>
+                </td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    } catch (err) {
+        console.error('Error fetching appointment requests:', err);
+    }
+}
+
+async function fetchQueueDetails() {
+    try {
+        const res = await axios.get(`${baseURL}/api/admin/opd/queue`); // backend route for OPD queue
+        const tableBody = document.querySelector('#opd-queue-table tbody');
+        tableBody.innerHTML = '';
+        const items = res.data.queue;
+        if (!items || items.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="5">No queue data</td></tr>';
+            return;
+        }
+        items.forEach(item => {
+            const tr = document.createElement('tr');
+            const waitTime = item.waitTimeMinutes ? item.waitTimeMinutes + ' min' : '-';
+            tr.innerHTML = `
+                <td>${item.token}</td>
+                <td>${item.patient.name}</td>
+                <td>${waitTime}</td>
+                <td>${item.doctor.name}</td>
+                <td><span class="status-badge ${item.status.toLowerCase()}">${item.status}</span></td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    } catch (err) {
+        console.error('Error fetching queue details:', err);
+    }
+}
+
+function startPolling() {
+    fetchUserProfile();
+    fetchStats();
+    fetchAppointmentRequests();
+    fetchQueueDetails();
+
+    // Poll every 15 seconds (or some interval you prefer)
+    setInterval(() => {
+        fetchStats();
+        fetchAppointmentRequests();
+        fetchQueueDetails();
+    }, 15000);
+}
+
+startPolling();
+
+// Handling approve/reject clicks
+document.querySelector('#appointment-requests-table').addEventListener('click', async (e) => {
+    if (e.target.matches('.btn-approve')) {
+        const apptId = e.target.dataset.id;
+        await axios.post(`${baseURL}/api/admin/appointments/${apptId}/approve`);
+        fetchAppointmentRequests(); // refresh
+    }
+    if (e.target.matches('.btn-reject')) {
+        const apptId = e.target.dataset.id;
+        await axios.post(`${baseURL}/api/admin/appointments/${apptId}/reject`);
+        fetchAppointmentRequests();
+    }
 });
 
-document.querySelectorAll('.btn-reject').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const row = this.closest('tr');
-        const statusBadge = row.querySelector('.status-badge');
-        statusBadge.textContent = 'Rejected';
-        statusBadge.className = 'status-badge rejected';
-        
-        const actionCell = row.querySelector('td:last-child');
-        actionCell.innerHTML = `<button class="btn-action">Manage</button>`;
-    });
+document.getElementById('btn-add-queue').addEventListener('click', () => {
+    // Show modal or form to add to queue
+    alert('Add to queue form opening...');
 });
 
-// Add to queue functionality
-document.querySelector('.btn-add-queue').addEventListener('click', function() {
-    alert('Add to queue functionality - would open a modal to add new patient to queue');
-});
-
-// Quick actions
-document.querySelectorAll('.action-item').forEach(item => {
-    item.addEventListener('click', function() {
-        const actionName = this.querySelector('span').textContent;
-        alert(`Opening ${actionName} interface...`);
-    });
-});
 </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -47,7 +47,21 @@ router.get("/register", (req, res) => {
 });
 // Register route
 router.post("/register", async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const {
+    name,
+    email,
+    password,
+    role,
+
+    // doctor-specific fields
+    department,
+    qualification,
+    specialization,
+    experience,
+    bio,
+    availableDays,
+    availableTimeSlots
+  } = req.body;
 
   try {
     const user = await User.findOne({ email });
@@ -59,22 +73,30 @@ router.post("/register", async (req, res) => {
       return res.render("login", { msg: "Error: Use a valid Email ID!" });
     }
 
-    // if (!isValidPassword(password)) {
-    //   return res.render("login", { msg: "Error: Password length must be 8 - Abcd@1234!" });
-    // }
-
     const hashedPassword = await bcrypt.hash(password, 10);
     const verificationToken = crypto.randomBytes(32).toString("hex");
 
-    const newUser = new User({
+    const newUserData = {
       name,
       email,
       password: hashedPassword,
       role,
       verificationToken,
       isVerified: false,
-    });
+    };
 
+    // If the role is doctor, attach the extra fields
+    if (role === "doctor") {
+      newUserData.department = department;
+      newUserData.qualification = qualification;
+      newUserData.specialization = specialization;
+      newUserData.experience = experience;
+      newUserData.bio = bio;
+      newUserData.availableDays = availableDays; // should be an array
+      newUserData.availableTimeSlots = availableTimeSlots; // should be an array
+    }
+
+    const newUser = new User(newUserData);
     await newUser.save();
 
     // Send verification email
@@ -86,28 +108,30 @@ router.post("/register", async (req, res) => {
       },
     });
 
-   const mailOptions = {
-  from: `"Autenic Support" <autenicyt@gmail.com>`,
-  to: email,
-  subject: "Verify your email address",
-  html: `
-    <h2>Hello!</h2>
-    <p>Thanks for registering. Please click the link below to verify your email address:</p>
-    <a href="https://sih-team-tech-archiver.onrender.com/api/auth/verify-email?token=${verificationToken}">Verify Email</a>
-    <p>If you didn’t request this, please ignore this email.</p>
-  `,
-};
+    const mailOptions = {
+      from: `"Autenic Support" <autenicyt@gmail.com>`,
+      to: email,
+      subject: "Verify your email address",
+      html: `
+        <h2>Hello!</h2>
+        <p>Thanks for registering. Please click the link below to verify your email address:</p>
+        <a href="https://sih-team-tech-archiver.onrender.com/api/auth/verify-email?token=${verificationToken}">Verify Email</a>
+        <p>If you didn’t request this, please ignore this email.</p>
+      `,
+    };
 
     await transporter.sendMail(mailOptions);
 
     return res.render("login", {
       msg: "Success: Verification email sent. Please check your inbox.",
     });
+
   } catch (err) {
     console.error(err);
     res.render("login", { msg: "Error: Server error" });
   }
 });
+
 
 // VERIFY EMAIL Route
 router.get("/verify-email", async (req, res) => {
