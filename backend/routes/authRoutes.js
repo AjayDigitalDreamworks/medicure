@@ -151,7 +151,8 @@ router.post("/login", (req, res, next) => {
     req.login(user, (err) => {
       if (err) return next(err);
       console.log(err);
-      // return res.redirect("/");
+      console.log(req.user);
+      return res.redirect("/");
     });
   })(req, res, next);
 });
