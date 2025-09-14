@@ -8,6 +8,8 @@ const cors = require("cors");
 const router = express.Router();
 const session = require("express-session");
 const flash = require('connect-flash');
+const User = require("./models/User");
+const { ensureAuthenticated , checkRoles } = require("./config/auth");
 dotenv.config();
 const app = express();
 const Patient = require('./models/Patient');
@@ -78,7 +80,7 @@ app.use("/api/emergency", emergencyRoutes);
 
 app.get("/api/patient/:id", async (req, res) => {
   try {
-    const patient = await Patient.findOne({ patientId: req.params.id });
+    const patient = await User.findOne({ _Id: req.params.id });
     if (!patient) return res.status(404).json({ error: "Patient not found" });
     res.json(patient);
   } catch (err) {
@@ -86,7 +88,35 @@ app.get("/api/patient/:id", async (req, res) => {
   }
 });
 
+// app.use('', require('./routes/userRoutes'));
+app.get('/api/user/profile', async (req, res) => {
+  try {
+    // Find user by ID (from the authenticated user)
+    const user = await User.findById(req.user.id); 
 
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Send back user data (exclude sensitive fields like password)
+    res.json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      department: user.department,
+      qualification: user.qualification,
+      specialization: user.specialization,
+      experience: user.experience,
+      bio: user.bio,
+      availableDays: user.availableDays,
+      availableTimeSlots: user.availableTimeSlots,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 // doctors
 const doctorAPIRoutes = require('./routes/patientroute'); // adjust path if needed
 app.use(doctorAPIRoutes);
@@ -95,6 +125,7 @@ app.use(doctorAPIRoutes);
 
 
 const methodOverride = require('method-override');
+// const { ensureAuthenticated } = require("./config/auth");
 app.use(methodOverride('_method'));
 
 app.use(flash()); 
