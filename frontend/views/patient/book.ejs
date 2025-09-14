@@ -406,31 +406,59 @@ class AppointmentBooking {
         this.setupCalendar();
     }
 
-    handleFormSubmission() {
-        // Collect form data
-        const formData = {
-            department: document.getElementById('departmentSelect').value,
-            doctor: document.getElementById('doctorSelect').value,
-            date: this.selectedDate.toISOString().split('T')[0],
-            time: this.selectedTime,
-            name: document.getElementById('patientName').value,
-            address: document.getElementById('patientAddress').value,
-            contact: document.getElementById('contactNumber').value,
-            purpose: document.getElementById('purposeVisit').value,
-            idProof: document.getElementById('idProof').files[0]
-        };
+   async handleFormSubmission() {
+    const department = document.getElementById('departmentSelect').value;
+    const doctor = document.getElementById('doctorSelect').value;
+    const name = document.getElementById('patientName').value;
+    const address = document.getElementById('patientAddress').value;
+    const contact = document.getElementById('contactNumber').value;
+    const purpose = document.getElementById('purposeVisit').value;
+    const idProof = document.getElementById('idProof').files[0];
 
-        // Validate required fields
-        if (!formData.department || !formData.doctor || !formData.name || !formData.contact) {
-            alert('Please fill in all required fields.');
-            return;
-        }
+    const date = this.selectedDate.toISOString().split('T')[0]; // YYYY-MM-DD
+    const time = this.selectedTime;
 
-        console.log('Appointment Data:', formData);
-        
-        // Here you would typically send the data to your server
-        alert(`Appointment booked successfully!\n\nDetails:\nDepartment: ${formData.department}\nDoctor: ${formData.doctor}\nDate: ${formData.date}\nTime: ${formData.time}\nPatient: ${formData.name}`);
+    // Validate required fields
+    if (!department || !doctor || !name || !contact || !date || !time) {
+        alert('Please fill in all required fields.');
+        return;
     }
+
+    // Build form data for multipart/form-data
+    const formData = new FormData();
+    formData.append('department', department);
+    formData.append('doctor', doctor);
+    formData.append('date', date);
+    formData.append('time', time);
+    formData.append('name', name);
+    formData.append('address', address);
+    formData.append('contact', contact);
+    formData.append('purpose', purpose);
+    if (idProof) {
+        formData.append('idProof', idProof);
+    }
+
+    try {
+        const res = await fetch('/patient/appointments/book', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+            alert('Appointment booked successfully!');
+            console.log('Appointment:', result.appointment);
+            // Optionally reset the form here
+        } else {
+            console.error('Error:', result.error);
+            alert('Failed to book appointment: ' + result.error);
+        }
+    } catch (err) {
+        console.error('Submission error:', err);
+        alert('An error occurred while booking your appointment.');
+    }
+}
 
     // Method to get available time slots (can be customized based on doctor/date)
     getAvailableTimeSlots(doctor, date) {

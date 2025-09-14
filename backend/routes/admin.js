@@ -16,82 +16,40 @@ const Emergency = require("../models/Emergency");
 // const bedOccupancyData = [];
 
 router.get("/dashboard", ensureAuthenticated, checkRoles(['admin']), async (req, res) => {
+
   try {
     if (req.user.role !== "admin") {
       return res.redirect("/api/auth/login");
     }
 
-    // Fetch data for dashboard
-    const recentDischarges = await Bed.find({ dischargeDate: { $ne: null } })
-      .sort({ dischargeDate: -1 })
-      .limit(10)
-      .select('patient id name ward dischargeDate');
 
-    const opds = await Queue.find({});
-    const opd = opds.length;
-
-    // Beds summary
-    const beds = await Bed.find({});
-    const totalBeds = beds.length;
-    const occupiedBeds = beds.filter((b) => b.status === "occupied").length;
-    const availableBeds = totalBeds - occupiedBeds;
-
-    // Bed Occupancy Trends - last 7 days
-    const today = new Date();
-    let bedOccupancyData = [];
-    for (let i = 6; i >= 0; i--) {
-      let day = new Date(today);
-      day.setHours(0, 0, 0, 0);
-      day.setDate(today.getDate() - i);
-
-      const occupiedCount = await Bed.countDocuments({
-        admitDate: { $lte: day },
-        $or: [{ dischargeDate: { $gte: day } }, { dischargeDate: null }],
-        status: "occupied",
-      });
-
-      bedOccupancyData.push({
-        date: day.toISOString().slice(0, 10),
-        occupied: occupiedCount,
-        available: totalBeds - occupiedCount,
-      });
-    }
-
-    // Inventory summary
-    const inventoryItems = await Inventory.find({})
-      .sort({ last_updated: -1 })
-      .limit(10);
-
-    // Doctors list
-    const doctors = await Doctor.find({}).sort({ name: 1 });
-
-    // OPD Queue Breakdown - patients by department (waiting)
-    const opdAggregation = await Queue.aggregate([
-      { $match: { status: "waiting" } },
-      { $group: { _id: "$department", count: { $sum: 1 } } },
-      { $sort: { count: -1 } },
+    const currentQueue = await Queue.countDocuments({ status: 'waiting' });
+    const availableDoctors = await User.countDocuments({ role: 'doctor', available: true });
+    const avgDoc = await Queue.aggregate([
+      { $match: { waitTimeMinutes: { $gt: 0 } } },
+      { $group: { _id: null, avgWait: { $avg: "$waitTimeMinutes" } } }
     ]);
+    const averageWaitTime = (avgDoc[0] && Math.round(avgDoc[0].avgWait)) || 0;
 
-    const opdBreakdownLabels = opdAggregation.map((d) => d._id);
-    const opdBreakdownData = opdAggregation.map((d) => d.count);
+    const start = new Date();
+    start.setHours(0,0,0,0);
+    const end = new Date();
+    end.setHours(23,59,59,999);
+
+    const upcomingAppointmentsToday = await Appointment.countDocuments({
+      date: { $gte: start, $lte: end },
+      status: 'approved'
+    });
 
     // Pass data to EJS
     res.set("Cache-Control", "no-store");
     res.render("opd", {
-      title: "Admin Dashboard",
-      user: req.user,
-      dashboardStats: {
-        totalBeds,
-        occupiedBeds,
-        availableBeds,
-        opd
-      },
-      bedOccupancyData,
-      inventoryData: inventoryItems,
-      doctorsData: doctors,
-      recentDischarges,
-      opdBreakdownLabels,
-      opdBreakdownData
+      stats: {
+        currentQueue,
+        availableDoctors,
+        averageWaitTime,
+        upcomingAppointmentsToday
+      }
     });
   } catch (err) {
     console.error("Dashboard error:", err);
@@ -128,7 +86,7 @@ function getDateRange(dateFilter) {
   }
 }
 
-router.get("/appointments", ensureAuthenticated, checkRoles(["admin", "doctor"]), async (req, res) => {
+router.get("/appointments", ensureAuthenticated, checkRoles(["admin"]), async (req, res) => {
   try {
     const { search, status, department, date, page = 1 } = req.query;
     const pageSize = 10;

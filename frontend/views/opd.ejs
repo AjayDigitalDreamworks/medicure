@@ -209,9 +209,11 @@ async function fetchUserProfile() {
 
 async function fetchStats() {
     try {
-        const res = await axios.get(`${baseURL}/api/admin/opd/stats`); 
+        const res = await axios.get(`${baseURL}/admin/dashboard`); 
         // Example: backend route that returns queue count, average wait time, etc.
         const stats = res.data.stats;
+        console.log(res);
+        console.log(stats);
         document.getElementById('queue-count').textContent = stats.currentQueue || 0;
         document.getElementById('available-doctors-count').textContent = stats.availableDoctors || 0;
         document.getElementById('avg-wait-time').textContent = stats.averageWaitTime || "-";
@@ -223,7 +225,7 @@ async function fetchStats() {
 
 async function fetchAppointmentRequests() {
     try {
-        const res = await axios.get(`${baseURL}/api/admin/appointments/requests?status=pending`);
+        const res = await axios.get(`${baseURL}/admin/appointments/requests?status=pending`);
         const tableBody = document.querySelector('#appointment-requests-table tbody');
         tableBody.innerHTML = '';
         const appointments = res.data.appointments;
@@ -252,7 +254,7 @@ async function fetchAppointmentRequests() {
 
 async function fetchQueueDetails() {
     try {
-        const res = await axios.get(`${baseURL}/api/admin/opd/queue`); // backend route for OPD queue
+        const res = await axios.get(`${baseURL}/admin/opd/queue`); // backend route for OPD queue
         const tableBody = document.querySelector('#opd-queue-table tbody');
         tableBody.innerHTML = '';
         const items = res.data.queue;
@@ -297,12 +299,12 @@ startPolling();
 document.querySelector('#appointment-requests-table').addEventListener('click', async (e) => {
     if (e.target.matches('.btn-approve')) {
         const apptId = e.target.dataset.id;
-        await axios.post(`${baseURL}/api/admin/appointments/${apptId}/approve`);
+        await axios.post(`${baseURL}/admin/appointments/${apptId}/approve`);
         fetchAppointmentRequests(); // refresh
     }
     if (e.target.matches('.btn-reject')) {
         const apptId = e.target.dataset.id;
-        await axios.post(`${baseURL}/api/admin/appointments/${apptId}/reject`);
+        await axios.post(`${baseURL}/admin/appointments/${apptId}/reject`);
         fetchAppointmentRequests();
     }
 });

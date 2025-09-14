@@ -216,31 +216,38 @@ router.get("/dashboard", ensureAuthenticated , checkRoles(['patient']), async (r
 
 
 // ===== Book Appointment =====
-router.post("/book-appointment", ensureAuthenticated, (req, res) => {
-    const { doctor, department, date, time } = req.body;
+// Appointment booking API (JSON response)
+router.post("/appointments/book", ensureAuthenticated, async (req, res) => {
+  try {
+    const { doctor, department, date, time, name, address, contact, purpose } = req.body;
 
-    if (!doctor || !department || !date || !time) {
-        return res.status(400).render("patient/book", { msg: "Error: Please fill in all the fields." });
+    if (!doctor || !department || !date || !time || !name || !contact) {
+      return res.status(400).json({ success: false, error: "Please fill in all required fields." });
     }
 
     const newAppointment = new Appointment({
-        patient: req.user._id,
-        user: req.user._id,
-        doctor,
-        department,
-        date,
-        time
+      patient: req.user._id,
+      user: req.user._id,
+      doctor,
+      department,
+      date,
+      time,
+      name,
+      address,
+      contact,
+      purpose
     });
 
+    await newAppointment.save();
 
-    newAppointment
-        .save()
-        .then(() => res.redirect("/patient/bookappointments"))
-        .catch((err) => {
-            console.error(err);
-            res.status(500).render("patient/dashboard", { msg: "Error booking the appointment. Please try again." });
-            console.log(err);
-        });
+    // ✅ return JSON
+    res.json({ success: true, appointment: newAppointment });
+
+  } catch (err) {
+    console.error("Booking error:", err);
+    res.status(500).json({ success: false, error: "Error booking appointment. Please try again." });
+  }
 });
+
 
 module.exports = router;
