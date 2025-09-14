@@ -24,14 +24,15 @@
       <div class="doctor-profile">
         <img src="https://randomuser.me/portraits/men/1.jpg" alt="Dr. Sanjay" class="doctor-avatar">
         <div class="doctor-info">
-          <h3>Dr. Sanjay</h3>
-          <p>Cardiologist, MD</p>
-        </div>
+                        <h3 id="user-name">Loading...</h3>
+                        <p id="user-role">Role</p>
+                        <span class="email" id="user-email">Email</span>
+                    </div>
       </div>
     </div>
     <div class="header-right">
       <button class="notification-btn"><i class="bi bi-bell"></i></button>
-      <button class="settings-btn"><i class="bi bi-gear"></i></button>
+      <a href="/api/auth/logout"><button class="settings-btn">Logout</button></a>
     </div>
   </header>
 
@@ -150,6 +151,22 @@ async function fetchStats() {
     console.error("Stats error:", err);
   }
 }
+
+
+async function fetchUserProfile() {
+    try {
+        const res = await axios.get(`${baseURL}/api/user/profile`); // make sure this route gives user data
+        const user = res.data;
+        console.log(user);
+        document.getElementById('user-name').textContent = user.name;
+        document.getElementById('user-role').textContent = user.role;
+        document.getElementById('user-email').textContent = user.email;
+    } catch (err) {
+        console.error('Error fetching profile:', err);
+    }
+}
+
+fetchUserProfile();
 
 // Fetch and update today's appointments
 async function fetchTodaysAppointments() {

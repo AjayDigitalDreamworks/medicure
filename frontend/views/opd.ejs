@@ -197,7 +197,8 @@ function formatTime(dateString) {
 async function fetchUserProfile() {
     try {
         const res = await axios.get(`${baseURL}/api/user/profile`); // make sure this route gives user data
-        const user = res.data.user;
+        const user = res.data;
+        console.log(user);
         document.getElementById('user-name').textContent = user.name;
         document.getElementById('user-role').textContent = user.role;
         document.getElementById('user-email').textContent = user.email;
